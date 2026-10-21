@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta name="theme-color" content="#101b30"/>
-  <title>VOLLEYLAB V0.18 — Aide facultative</title>
+  <title>VOLLEYLAB V0.19 — Aide facultative</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -13,7 +13,7 @@
     <div class="vignette" aria-hidden="true"></div>
 
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">V<span>●</span></span><span>VOLLEYLAB <small>PLAYTEST 0.18</small></span></div>
+      <div class="brand"><span class="brand-mark">V<span>●</span></span><span>VOLLEYLAB <small>PLAYTEST 0.19</small></span></div>
       <div class="scoreboard" aria-live="polite">
         <div class="side blue"><span class="team">BLEUS</span><strong id="scoreBlue">0</strong></div>
         <div class="matchmeta"><span id="status">PREMIER SET</span><span class="dividing">/</span><span id="scoreMode">2v2</span><span class="dividing">/</span><span>15 PTS · +2</span></div>
@@ -85,6 +85,17 @@
       <section class="legend"><div><span class="key">◉</span> Caméra réglable</div><div><span id="settingsLegend" class="key">T</span> Options et touches</div><div><span id="servePracticeLegend" class="key">H</span> Retester service</div><div><span id="practiceLegend" class="key">B</span> Balle test</div><div><span id="smashPracticeLegend" class="key">G</span> Tester smash</div><div><span id="pauseLegend" class="key">P</span> Pause</div></section>
     </div>
 
+    <aside id="quickBar" class="quick-bar hidden" aria-label="Messages rapides après un point">
+      <div class="quick-title"><b>💬 RÉACTIONS</b><span>PROCHAIN SERVICE : <strong id="quickCount">4</strong>s</span></div>
+      <div class="quick-list">
+        <button type="button" data-quick="0"><kbd>1</kbd> 👏 Bien joué !</button>
+        <button type="button" data-quick="1"><kbd>2</kbd> 😎 Trop facile !</button>
+        <button type="button" data-quick="2"><kbd>3</kbd> 🔥 Quel smash !</button>
+        <button type="button" data-quick="3"><kbd>4</kbd> 😅 C'était chaud !</button>
+        <button type="button" data-quick="4"><kbd>5</kbd> 😬 Ma faute !</button>
+        <button type="button" data-quick="5"><kbd>6</kbd> 😤 Revanche !</button>
+      </div>
+    </aside>
     <aside id="settings" class="settings hidden" aria-label="Options de jeu">
       <div class="settings-header"><b>⚙ OPTIONS DU JEU</b><button id="closeSettings" type="button" aria-label="Fermer les options">✕</button></div>
       <p>Touches personnalisables et enregistrées dans ce navigateur. Au service : Saut lance la balle, clic gauche engage, double clic gauche sert lobé. Saut simple : frappe normale. Double appui rapide sur saut : grand saut permettant un smash avec la frappe. Double clic : version lobée de la frappe/passe (un léger délai permet de reconnaître le second clic).</p>
@@ -151,7 +162,7 @@
     </aside>
 
     <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.18</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
+      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.19</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
         <p id="modalDesc">Volleyball arcade 3D : choisis le format de ton match. Les personnages cartoon de la V0.11, la caméra réglable, les frappes, le service et les commandes personnalisées sont conservés.</p>
         <div class="mode-select" aria-label="Choix du format d’équipe">
           <div class="mode-heading"><strong>CHOISIS TON FORMAT</strong><span>EN SOLO CONTRE DES BOTS</span></div>
@@ -184,9 +195,9 @@
         </div>
         </details>
         <button class="play-btn" id="playBtn" type="button">JOUER EN 2v2 <span>↗</span></button>
-        <button class="play-btn play-btn-online" id="onlineOpenBtn" type="button">JOUER EN LIGNE — 2v2 <span>✦</span></button>
+        <button class="play-btn play-btn-online" id="onlineOpenBtn" type="button">JOUER EN LIGNE — 1v1 / 2v2 <span>✦</span></button>
         <button class="modal-settings-btn" id="menuSettingsBtn" type="button">⚙ Configurer la caméra et les touches</button>
-        <small>Solo contre l’IA ou multijoueur privé en 2v2. Discord n’est pas encore intégré. Clique sur « Entrer » pour activer les sons.</small>
+        <small>Solo contre l’IA ou multijoueur privé en 1v1 / 2v2. Discord n’est pas encore intégré. Clique sur « Entrer » pour activer les sons.</small>
       </div>
     </section>
 
@@ -195,13 +206,15 @@
       <div class="online-card">
         <div class="online-kicker">VOLLEYLAB · MULTIJOUEUR PRIVÉ</div>
         <h2>LE TERRAIN EST À VOUS.</h2>
-        <p>Invitez trois amis pour disputer un vrai match <strong>2 contre 2</strong>. Chaque participant joue depuis son navigateur.</p>
+        <p>Défie un ami en <strong>1v1</strong>, ou joue en <strong>2v2</strong>. S'il manque quelqu’un, ajoute un bot en un clic !</p>
         <label for="onlineName">Ton pseudo</label><input id="onlineName" maxlength="17" autocomplete="nickname" placeholder="Ton pseudo" value="Joueur"/>
+        <div class="room-mode-picker" id="onlineModePicker" role="group" aria-label="Choisir le mode du salon"><button type="button" class="room-mode selected" data-online-mode="2v2" aria-pressed="true">🏐 2v2</button><button type="button" class="room-mode" data-online-mode="1v1" aria-pressed="false">⚡ 1v1</button></div>
         <div class="online-row"><button type="button" id="onlineCreate">Créer un salon</button><span>ou</span><input id="onlineCode" maxlength="6" spellcheck="false" placeholder="CODE" aria-label="Code du salon"/><button type="button" id="onlineJoin">Rejoindre</button></div>
         <div id="onlineStatus" role="status" class="online-status">Choisis « Créer un salon » pour inviter tes amis.</div>
         <div id="roomInfo" class="hidden"><div class="room-code"><span>CODE DE TON SALON</span><strong id="roomCode">------</strong><button id="onlineCopy" type="button">Copier l'invitation</button></div>
           <div class="room-teams"><div><b>🔵 BLEUS</b><span id="roomBlue">En attente · En attente</span></div><div><b>🔴 ROUGES</b><span id="roomRed">En attente · En attente</span></div></div>
-          <p class="room-hint">Le match démarre automatiquement dès que les quatre joueurs ont rejoint.</p>
+          <div id="onlineBotControls" class="online-bot-controls hidden"><b>COMPLÉTER AVEC DES BOTS</b><div class="online-bot-buttons"><button type="button" id="onlineAddBlue">+ Bot bleu</button><button type="button" id="onlineAddRed">+ Bot rouge</button><button type="button" id="onlineRemoveBots">Retirer bots</button></div><button type="button" class="online-start" id="onlineStart" disabled>Lancer le match</button></div>
+          <p class="room-hint" id="onlineRoomHint">En 2v2, remplis les 4 places. Un match entièrement humain démarre automatiquement.</p>
         </div>
         <div class="online-footer"><button id="onlineClose" type="button">← Retour</button><span>Version de test · Pas de classement</span></div>
       </div>

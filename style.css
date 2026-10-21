@@ -278,3 +278,24 @@
 @keyframes fall{0%{transform:translateY(-24px) rotate(0);opacity:0}8%{opacity:.9}85%{opacity:.85}100%{transform:translateY(110vh) rotate(760deg);opacity:0}}
 @media(max-width:650px){.match-celebration{padding-top:132px}.celebration-header{padding:13px 18px}.celebration-header strong{font-size:23px}.celebration-header b{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.celebration-header,.celebration-icon,.celebration-confetti i{animation:none!important}.celebration-confetti{display:none}}
+
+/* VOLLEYLAB 0.19 — salons 1v1/2v2 et bots, réactions compactes. */
+.room-mode-picker{display:flex;gap:8px;margin:12px 0 7px}
+.room-mode{flex:1;padding:11px 8px;border:1px solid #9bbccc70;border-radius:10px;background:#1a3448;color:#e6f9fc;font-weight:900;font-size:13px;cursor:pointer}
+.room-mode.selected{background:#176d69;border-color:#93fbe9;box-shadow:inset 0 0 0 1px #a1fff175}
+.online-bot-controls{border:1px solid #8ae9d64d;border-radius:12px;background:rgba(5,26,43,.5);padding:12px;margin-top:14px}
+.online-bot-controls>b{display:block;font-size:10px;letter-spacing:.09em;color:#b4f7ec;margin-bottom:9px}
+.online-bot-buttons{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
+.online-bot-buttons button{border-radius:8px;background:#1e526c;color:#e8fbff;border:1px solid #ffffff3b;padding:10px 5px;font-size:11px;font-weight:850;cursor:pointer}
+.online-bot-buttons button:hover:not(:disabled){background:#257e81}
+.online-bot-buttons button:disabled,.online-start:disabled{opacity:.42;cursor:not-allowed}
+.online-start{width:100%;border-radius:9px;border:1px solid #84ffe2;background:linear-gradient(135deg,#40c19b,#55d9ac);color:#082c35;font-weight:950;padding:12px;cursor:pointer}
+.quick-bar{position:absolute;bottom:124px;left:50%;transform:translateX(-50%);width:min(680px,calc(100vw - 28px));z-index:7;pointer-events:auto;padding:12px 14px;border-radius:16px;background:rgba(12,35,53,.93);border:1px solid #94d0dc78;box-shadow:0 10px 28px #041a2c80;backdrop-filter:blur(8px)}
+.quick-title{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px;color:#b9e6ee;font-size:10px;letter-spacing:.06em}
+.quick-title>b{font-size:10px;color:#a4ffe0}
+.quick-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.quick-list button{font-size:11px;font-weight:850;padding:7px 6px;border-radius:8px;border:1px solid #ffffff33;background:#1c455a;color:#fff;cursor:pointer;text-align:left}
+.quick-list button:hover{background:#237789;border-color:#95fff1}
+.quick-list kbd{display:inline-block;background:#0d293b;border-radius:4px;padding:3px 5px;margin-right:6px;font-size:10px}
+@media(max-width:680px){.quick-bar{bottom:112px;padding:9px}.quick-list button{font-size:10px}.quick-list{gap:4px}}
+@media(max-width:430px){.quick-list{grid-template-columns:repeat(2,minmax(0,1fr))}.online-bot-buttons{grid-template-columns:1fr 1fr}.online-bot-buttons button:last-child{grid-column:span 2}}

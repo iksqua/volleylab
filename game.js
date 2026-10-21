@@ -1,5 +1,5 @@
 /* VOLLEYLAB — prototype WebGL avec salons privés synchronisés.
-   V0.17 : prediction locale, interpolation réseau, qualité adaptative. */
+   V0.19 : modes 1v1/2v2, bots réseau, réactions entre les points. */
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
@@ -172,7 +172,7 @@ function sidePlayers(team){return players.filter(p=>p.team===team);}
 function friendlyBots(){return players.filter(p=>p.team==='blue'&&p.id!==0);}
 function matchChip(){
  const n=game.teamSize;
- if(onlineMode){$('scoreMode').textContent='2v2 EN LIGNE';$('rosterChip').textContent='SALON '+onlineRoom;return;}
+ if(onlineMode){$('scoreMode').textContent=onlineRoomMode+' EN LIGNE';$('rosterChip').textContent='SALON '+onlineRoom;return;}
  $('scoreMode').textContent=n+'v'+n;
  $('rosterChip').innerHTML=n+'v'+n+' <span>•</span> '+(n===1?'Duel contre 1 bot':'Toi + '+(n-1)+' bot'+(n>2?'s':'')+' contre '+n+' bots');
 }
@@ -180,10 +180,11 @@ const ball={x:0,y:3.4,z:4,vx:0,vy:0,vz:0,spin:0};
 const trail=[],particles=[];
 const game={teamSize:2,mode:'menu',blue:0,red:0,server:'blue',serveStage:'ready',serveElapsed:0,serveClock:12,timer:0,elapsed:0,camera:1,paused:false,touchTeam:null,touchCount:0,pointReason:'',hitQueued:null,toastTimer:0,camSmooth:null,ballLive:false,after:0,passToMate:false,smashFX:0,lastAction:'',actionTimer:0,lastCommand:'',commandCount:0};
 // ----- Connection multijoueur : le serveur valide les mouvements, les tirs et le score. -----
-let onlineMode=false, onlineRoom='', onlineSlot=-1, onlineTeam='blue', onlineSocket=null;
+let onlineMode=false, onlineRoom='', onlineSlot=-1, onlineTeam='blue', onlineSocket=null, onlineRoomMode='2v2',onlineHost=false,onlineChosenMode='2v2',onlineActive=false;
 let onlineFrameAge=0, onlineNotice='', onlineRoster='', onlineInputElapsed=0;
 let onlineSnapshots=[],onlineSelfServer=null,onlineServerMode='',onlinePingMs=null,onlinePingElapsed=0;
 const MATCH_TARGET=15;
+const QUICK_LINES=['BIEN JOUÉ !','TROP FACILE !','QUEL SMASH !','C’ÉTAIT CHAUD !','MA FAUTE !','REVANCHE !'];
 const hasMatchWinner=(blue,red)=>Math.max(blue,red)>=MATCH_TARGET&&Math.abs(blue-red)>=2;
 const matchWinnerTeam=(blue,red)=>hasMatchWinner(blue,red)?(blue>red?'blue':'red'):null;
 const onlinePhysics={speed:8.5,accel:30,brake:35,gravity:21,walkLimit:13,netGap:.85,beachZ:12.12};
@@ -195,7 +196,29 @@ function onlineSetStatus(text){$('onlineStatus').textContent=text;}
 function onlineInvite(){return location.origin+'/?room='+encodeURIComponent(onlineRoom);}
 async function copyRoomInvite(){if(!onlineRoom)return;try{await navigator.clipboard.writeText(onlineInvite());showToast('LIEN D’INVITATION COPIÉ !',1.8);}catch{window.prompt('Copie le lien :',onlineInvite());}}
 function onlineLobbyOverlay(open){$('onlineOverlay').classList.toggle('hidden',!open);}
-function openOnline(){audio.unlock();closeOptions();onlineLobbyOverlay(true);onlineSetStatus('Crée un salon ou rejoins un ami avec son code.');$('roomInfo').classList.add('hidden');try{$('onlineName').value=localStorage.getItem('volleylab:pseudo')||'Joueur';}catch{}}
+function showQuickBar(show){$('quickBar').classList.toggle('hidden',!show);}
+function sendQuick(id){if(onlineMode&&onlineReady()&&game.mode==='point'&&Number.isInteger(id)&&id>=0&&id<QUICK_LINES.length)onlineSend({type:'quick',id});}
+function setOnlineMode(mode){onlineChosenMode=mode==='1v1'?'1v1':'2v2';for(const el of document.querySelectorAll('[data-online-mode]')){const selected=el.dataset.onlineMode===onlineChosenMode;el.classList.toggle('selected',selected);el.setAttribute('aria-pressed',String(selected));}}
+function onlineLobbyUi(data){
+ onlineRoomMode=data.mode==='1v1'?'1v1':'2v2';onlineHost=data.hostSlot===onlineSlot;onlineActive=!!data.active;
+ $('onlineModePicker').classList.toggle('hidden',!!onlineRoom);
+ const slots=new Map((data.players||[]).map(p=>[p.slot,p]));
+ const side=team=>onlineRoomMode==='1v1'?[team==='blue'?0:2]:team==='blue'?[0,1]:[2,3];
+ const label=i=>{const p=slots.get(i);return p?(p.bot?'🤖 ':'')+p.name:'En attente…';};
+ $('roomBlue').textContent=side('blue').map(label).join(' · ');
+ $('roomRed').textContent=side('red').map(label).join(' · ');
+ const count=data.players?.length||0,total=onlineRoomMode==='1v1'?2:4;
+ $('roomBadgeText').textContent=onlineRoomMode+' · '+data.code+' · '+count+'/'+total;
+ $('onlineRoomHint').textContent=onlineRoomMode==='1v1'?'Deux adversaires suffisent. Tu peux aussi ajouter un bot pour t’entraîner.':`En 2v2, ${total} places sont nécessaires. Les matchs entièrement humains démarrent automatiquement.`;
+ $('onlineBotControls').classList.toggle('hidden',!onlineHost||data.active);
+ $('onlineAddBlue').disabled=side('blue').every(i=>slots.has(i));
+ $('onlineAddRed').disabled=side('red').every(i=>slots.has(i));
+ $('onlineRemoveBots').disabled=!(data.players||[]).some(p=>p.bot);
+ $('onlineStart').disabled=!data.canStart;
+ $('onlineStart').textContent=data.canStart?'▶ Lancer le match':'Complète les équipes';
+ onlineSetStatus(data.notice||count+'/'+total+' places occupées');
+}
+function openOnline(){audio.unlock();closeOptions();if(!onlineRoom)$('onlineModePicker').classList.remove('hidden');onlineLobbyOverlay(true);onlineSetStatus('Crée un salon ou rejoins un ami avec son code.');$('roomInfo').classList.add('hidden');try{$('onlineName').value=localStorage.getItem('volleylab:pseudo')||'Joueur';}catch{}}
 function closeOnline(){if(onlineRoom){onlineLeave();return;}onlineLobbyOverlay(false);}
 function onlineConnect(mode){
  if(onlineSocket&&onlineSocket.readyState===WebSocket.CONNECTING)return;
@@ -206,15 +229,15 @@ function onlineConnect(mode){
  let socket;
  try{socket=new WebSocket((location.protocol==='https:'?'wss://':'ws://')+location.host+'/ws');}catch{onlineSetStatus('Impossible de contacter le serveur.');return;}
  onlineSocket=socket;
- socket.addEventListener('open',()=>{socket.send(JSON.stringify(mode==='join'?{type:'join',code,name}:{type:'create',name}));});
+ socket.addEventListener('open',()=>{socket.send(JSON.stringify(mode==='join'?{type:'join',code,name}:{type:'create',name,mode:onlineChosenMode}));});
  socket.addEventListener('message',e=>{if(socket!==onlineSocket)return;let data;try{data=JSON.parse(e.data);}catch{return;}onlineMessage(data);});
- socket.addEventListener('close',()=>{if(socket!==onlineSocket)return;hideVictory();game.winTeam=null;onlineSocket=null;onlineMode=false;onlineRoom='';onlineSlot=-1;onlineSnapshots.length=0;onlineSelfServer=null;$('app').classList.remove('online-active');game.mode='menu';audio.setActive(false);$('roomBadge').classList.add('hidden');onlineLobbyOverlay(true);onlineSetStatus('Connexion perdue. Rejoins le salon pour reprendre.');modal.classList.add('hidden');});
+ socket.addEventListener('close',()=>{if(socket!==onlineSocket)return;hideVictory();game.winTeam=null;onlineSocket=null;onlineMode=false;onlineRoom='';onlineSlot=-1;onlineHost=false;onlineSnapshots.length=0;onlineSelfServer=null;showQuickBar(false);$('app').classList.remove('online-active');game.mode='menu';audio.setActive(false);$('roomBadge').classList.add('hidden');onlineLobbyOverlay(true);onlineSetStatus('Connexion perdue. Rejoins le salon pour reprendre.');modal.classList.add('hidden');});
  socket.addEventListener('error',()=>{onlineSetStatus('Le serveur ne répond pas. Réessaie.');});
 }
-function onlineLeave(){hideVictory();game.winTeam=null;const old=onlineSocket;onlineSocket=null;onlineMode=false;onlineRoom='';onlineSlot=-1;onlineSnapshots.length=0;onlineSelfServer=null;$('app').classList.remove('online-active');keys.clear();stopCharge();if(old)old.close();$('roomBadge').classList.add('hidden');for(const id of ['servePracticeBtn','practiceBtn','smashPracticeBtn'])$(id).classList.remove('hidden');onlineLobbyOverlay(false);game.mode='menu';game.paused=false;game.camSmooth=null;modal.classList.remove('hidden');resetMatch();backToMenu();}
+function onlineLeave(){hideVictory();game.winTeam=null;const old=onlineSocket;onlineSocket=null;onlineMode=false;onlineRoom='';onlineSlot=-1;onlineHost=false;onlineSnapshots.length=0;onlineSelfServer=null;showQuickBar(false);$('app').classList.remove('online-active');keys.clear();stopCharge();if(old)old.close();$('roomBadge').classList.add('hidden');for(const id of ['servePracticeBtn','practiceBtn','smashPracticeBtn'])$(id).classList.remove('hidden');onlineLobbyOverlay(false);game.mode='menu';game.paused=false;game.camSmooth=null;modal.classList.remove('hidden');resetMatch();backToMenu();}
 function onlineMakeRoster(state){const ordered=[state.players.find(p=>p.slot===onlineSlot),...state.players.filter(p=>p.slot!==onlineSlot)].filter(Boolean);
- const sig=ordered.map(p=>p.slot+':'+p.name).join('|');if(sig===onlineRoster)return;
- onlineRoster=sig;onlineSnapshots.length=0;onlineSelfServer=null;players.length=0;for(let i=0;i<ordered.length;i++){const sp=ordered[i],p=newPlayer(sp.team,i===0?sp.name+' (TOI)':sp.name,i);p.slot=sp.slot;players.push(p);}
+ const sig=ordered.map(p=>p.slot+':'+p.name+':'+p.bot).join('|');if(sig===onlineRoster)return;
+ onlineRoster=sig;onlineSnapshots.length=0;onlineSelfServer=null;players.length=0;for(let i=0;i<ordered.length;i++){const sp=ordered[i],p=newPlayer(sp.team,i===0?sp.name+' (TOI)':sp.name,i);p.slot=sp.slot;p.bot=!!sp.bot;players.push(p);}
  playerSpeechUntil=players.map(()=>0);rebuildPlayerLabels();game.camSmooth=null;
 }
 function onlineMessage(data){
@@ -223,10 +246,10 @@ function onlineMessage(data){
    if(Number.isFinite(elapsed)&&elapsed>=0&&elapsed<10000)onlinePingMs=onlinePingMs===null?elapsed:numSmooth(onlinePingMs,elapsed,.2);
    return;
  }
- if(data.type==='error'){onlineSetStatus('⚠ '+String(data.message||'Erreur'));return;}
- if(data.type==='joined'){onlineMode=true;onlineRoom=data.code;onlineSlot=data.slot;onlineTeam=data.team;onlineSnapshots.length=0;onlineSelfServer=null;onlinePingElapsed=0;aim.z=data.team==='red'?-6:6;onlineRoster='';$('app').classList.add('online-active');$('roomCode').textContent=data.code;$('roomBadgeText').textContent='2v2 · '+data.code;$('roomInfo').classList.remove('hidden');$('roomBadge').classList.remove('hidden');modal.classList.add('hidden');for(const id of ['servePracticeBtn','practiceBtn','smashPracticeBtn'])$(id).classList.add('hidden');onlineSetStatus('Salon prêt ! Partage le lien avec trois amis.');return;}
- if(data.type==='lobby'){const slots=new Map((data.players||[]).map(p=>[p.slot,p]));$('roomBlue').textContent=[0,1].map(i=>slots.get(i)?.name||'En attente…').join(' · ');$('roomRed').textContent=[2,3].map(i=>slots.get(i)?.name||'En attente…').join(' · ');$('roomBadgeText').textContent='2v2 · '+data.code+' · '+data.players.length+'/4';onlineSetStatus(data.notice||data.players.length+'/4 joueurs connectés');if(!data.active){onlineLobbyOverlay(true);game.mode='menu';}return;}
- if(data.type==='start'){hideVictory();game.winTeam=null;onlineLobbyOverlay(false);game.mode='serve';game.teamSize=2;game.camSmooth=null;game.paused=false;cancelPendingShots();stopCharge();audio.unlock();audio.setActive(true);showToast('🏐 MATCH EN LIGNE — 2 CONTRE 2 !',2);return;}
+ if(data.type==='error'){onlineSetStatus('⚠ '+String(data.message||'Erreur'));showToast(String(data.message||'Erreur'),1.9);return;}
+ if(data.type==='joined'){onlineMode=true;onlineRoom=data.code;onlineSlot=data.slot;onlineTeam=data.team;onlineRoomMode=data.mode==='1v1'?'1v1':'2v2';onlineSnapshots.length=0;onlineSelfServer=null;onlinePingElapsed=0;aim.z=data.team==='red'?-6:6;onlineRoster='';$('app').classList.add('online-active');$('roomCode').textContent=data.code;$('roomBadgeText').textContent=onlineRoomMode+' · '+data.code;$('roomInfo').classList.remove('hidden');$('roomBadge').classList.remove('hidden');modal.classList.add('hidden');for(const id of ['servePracticeBtn','practiceBtn','smashPracticeBtn'])$(id).classList.add('hidden');onlineSetStatus('Salon prêt ! Partage le lien et ajoute des bots si nécessaire.');return;}
+ if(data.type==='lobby'){onlineLobbyUi(data);if(!data.active){showQuickBar(false);onlineLobbyOverlay(true);game.mode='menu';}return;}
+ if(data.type==='start'){hideVictory();game.winTeam=null;showQuickBar(false);onlineLobbyOverlay(false);game.mode='serve';game.teamSize=onlineRoomMode==='1v1'?1:2;game.camSmooth=null;game.paused=false;cancelPendingShots();stopCharge();audio.unlock();audio.setActive(true);showToast('🏐 MATCH EN LIGNE — '+(onlineRoomMode==='1v1'?'DUEL 1v1':'2 CONTRE 2')+' !',2);return;}
  if(data.type==='state'){
    if(!onlineMode)return;
    onlineFrameAge=0;
@@ -256,8 +279,8 @@ function onlineMessage(data){
    if(mine)onlineSelfServer={...mine,receivedAt:now};
    game.mode=data.mode;game.server=data.server;game.serveStage=data.serveStage;
    game.serveClock=data.serveClock;game.ballLive=data.ballLive;
-   game.blue=data.score[0];game.red=data.score[1];game.touchCount=data.touchCount;game.teamSize=2;
-   updateHUD();$('scoreMode').textContent='2v2 EN LIGNE';$('rosterChip').textContent='EN LIGNE · '+onlineRoom;
+   game.blue=data.score[0];game.red=data.score[1];game.touchCount=data.touchCount;game.teamSize=data.teamSize||2;game.timer=data.roundTime||0;showQuickBar(data.mode==='point');if(data.mode==='point')$('quickCount').textContent=Math.ceil(data.roundTime||0);
+   updateHUD();$('scoreMode').textContent=onlineRoomMode+' EN LIGNE';$('rosterChip').textContent='EN LIGNE · '+onlineRoom;
    if(game.mode==='serve'){
      $('servePanel').classList.add('hidden');
      $('hitType').textContent=data.serveSlot===onlineSlot?(data.serveStage==='ready'?'TON SERVICE : '+formatKey(bindings.jump)+' POUR LANCER':'FRAPPE : '+formatKey(bindings.hit)+' · DOUBLE CLIC : LOB'):('SERVICE ADVERSE · SOIS PRÊT');
@@ -268,6 +291,7 @@ function onlineMessage(data){
    const p=players.find(p=>p.slot===data.slot);
    if(data.name==='hit'){if(p){const kind=data.kind||'normal';sayPlayer(p.id,({normal:'FRAPPE',lob:'LOB',pass:'PASSE',passLob:'PASSE LOBÉE',smash:'SMASH',smashLob:'SMASH LOBÉ'})[kind]||'FRAPPE');playFX(kind==='normal'?'hit':kind,Number(data.power)||.7,p.x);}return;}
    if(data.name==='point'){if(data.ground){playFX('ground',.62,Number(ball.x)||0);playFX('pointFun',.74,0,.14);}else playFX('score',.56);showToast((data.team==='blue'?'POINT BLEU ! ':'POINT ROUGE ! ')+(data.reason||''),1.3);return;}
+   if(data.name==='quick'){const sp=players.find(p=>p.slot===data.slot);if(sp&&Number.isInteger(data.id)&&QUICK_LINES[data.id]){sayPlayer(sp.id,QUICK_LINES[data.id],2.1);playFX('score',.23,sp.x);}return;}
    if(data.name==='net'){playFX('net',.7,Number(data.x)||0);return;}
    if(data.name==='dive'){if(p){playFX('dive',.7,p.x);sayPlayer(p.id,'PLONGEON');}return;}
    if(data.name==='serve'){if(p){sayPlayer(p.id,'SERVICE !');playFX('serve',.8,p.x);}return;}
@@ -663,7 +687,7 @@ function serviceFault(){
  point('red','FAUTE DE SERVICE');
 }
 
-function point(team,why='',ground=false){if(game.mode!=='live'&&game.mode!=='serve')return;cancelPendingShots();stopCharge();game.mode='point';game.ballLive=false;game.timer=1.55;game.blue+=(team==='blue'?1:0);game.red+=(team==='red'?1:0);game.server=team;game.pointReason=why;if(ground)playFX('pointFun',.78,0,.15);else playFX('score',.54,0,.12);showToast((team==='blue'?'POINT BLEU ! ':'POINT ROUGE ! ')+(why||''),1.5);game.after=hasMatchWinner(game.blue,game.red)?'end':'serve';updateHUD();}
+function point(team,why='',ground=false){if(game.mode!=='live'&&game.mode!=='serve')return;cancelPendingShots();stopCharge();game.mode='point';game.ballLive=false;game.timer=3.5;game.blue+=(team==='blue'?1:0);game.red+=(team==='red'?1:0);game.server=team;game.pointReason=why;if(ground)playFX('pointFun',.78,0,.15);else playFX('score',.54,0,.12);showToast((team==='blue'?'POINT BLEU ! ':'POINT ROUGE ! ')+(why||''),1.5);game.after=hasMatchWinner(game.blue,game.red)?'end':'serve';updateHUD();}
 function contactParticles(pos,color){for(let i=0;i<13;i++){let ang=rand(0,TAU);particles.push({x:pos.x,y:pos.y,z:pos.z,vx:Math.cos(ang)*rand(1,4),vy:rand(1,5),vz:Math.sin(ang)*rand(1,4),life:.42,color});}}
 function launchTo(tx,tz,kind,power,team,isServe=false){let dx=tx-ball.x,dz=tz-ball.z,d=Math.hypot(dx,dz);let flight=kind==='lob'||kind==='passLob'?1.62+(.55*(1-power)):kind==='smash'?(0.53+.24*(1-power))/P.smash:kind==='smashLob'?(1.1+.24*(1-power))/Math.sqrt(P.smash):kind==='pass'?.95+.24*(1-power):1.06+.40*(1-power);flight=Math.max(flight,d/21);const landHeight=kind==='pass'||kind==='passLob'?1.35:.42;ball.vx=dx/flight;ball.vz=dz/flight;ball.vy=(landHeight-ball.y+.5*P.gravity*flight*flight)/flight;ball.spin+=(power+.4)*4;game.ballLive=true;if(isServe)playFX('serve',power*.8,ball.x);if(!isServe){if(game.touchTeam===team){game.touchCount++;if(game.touchCount>3){point(team==='blue'?'red':'blue','4 TOUCHES');return;}}else{game.touchCount=1;game.touchTeam=team;}contactParticles(ball,team==='blue'?'#78dfff':'#ffae87');playFX(kind==='normal'?'hit':kind, power*(team==='blue'?1:.88),ball.x);}}
 function userHit(kind,power){
@@ -1196,6 +1220,7 @@ window.addEventListener('keydown',e=>{
  if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;
  if(!e.metaKey&&(Object.values(bindings).includes(e.code)||['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code)))e.preventDefault();
  if(!$('settings').classList.contains('hidden')){if(e.code==='Escape'||e.code===bindings.settings){e.preventDefault();closeOptions();}return;}
+ if(onlineMode&&game.mode==='point'&&/^Digit[1-6]$/.test(e.code)&&!e.repeat){e.preventDefault();sendQuick(Number(e.code.slice(-1))-1);return;}
  if(e.code==='Escape'&&onlineMode){showToast('EN LIGNE — PAS DE PAUSE',.8);return;}
  if(e.code==='Escape'&&game.mode!=='menu'){game.paused=!game.paused;audio.setActive(!game.paused);if(game.paused)stopCharge();showToast(game.paused?'PAUSE':'C’EST REPARTI !',1);return;}
  if(e.repeat)return;
@@ -1264,6 +1289,13 @@ $('closeSettings').addEventListener('click',closeOptions);
 $('soundBtn').addEventListener('click',()=>{audio.setEnabled(!audio.enabled);if(audio.enabled){audio.unlock();audio.play('hit',.58,0);}updateAudioUI();storeOptions();});
 $('resetBtn').addEventListener('click',()=>{if(onlineMode){closeOptions();showToast('RESTART DÉSACTIVÉ EN LIGNE',1);return;}closeOptions();resetMatch();modal.classList.add('hidden');});
 for(let name of ['gravity','assist','speed','smash']){$(name).addEventListener('input',e=>{P[name]=parseFloat(e.target.value);$(name+'Value').textContent=P[name].toFixed(1);});}
+for(const el of document.querySelectorAll('[data-online-mode]'))el.addEventListener('click',()=>setOnlineMode(el.dataset.onlineMode));
+setOnlineMode('2v2');
+for(const el of document.querySelectorAll('[data-quick]'))el.addEventListener('click',()=>sendQuick(Number(el.dataset.quick)));
+$('onlineAddBlue').addEventListener('click',()=>onlineSend({type:'addBot',team:'blue'}));
+$('onlineAddRed').addEventListener('click',()=>onlineSend({type:'addBot',team:'red'}));
+$('onlineRemoveBots').addEventListener('click',()=>onlineSend({type:'removeBots'}));
+$('onlineStart').addEventListener('click',()=>onlineSend({type:'start'}));
 $('onlineOpenBtn').addEventListener('click',openOnline);
 $('onlineClose').addEventListener('click',closeOnline);
 $('onlineCreate').addEventListener('click',()=>onlineConnect('create'));
