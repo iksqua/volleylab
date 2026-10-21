@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta name="theme-color" content="#101b30"/>
-  <title>VOLLEYLAB V0.15 — Aide facultative</title>
+  <title>VOLLEYLAB V0.16 — Aide facultative</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -127,7 +127,7 @@
     </aside>
 
     <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.15</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
+      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.16</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
         <p id="modalDesc">Volleyball arcade 3D : choisis le format de ton match. Les personnages cartoon de la V0.11, la caméra réglable, les frappes, le service et les commandes personnalisées sont conservés.</p>
         <div class="mode-select" aria-label="Choix du format d’équipe">
           <div class="mode-heading"><strong>CHOISIS TON FORMAT</strong><span>EN SOLO CONTRE DES BOTS</span></div>
@@ -160,11 +160,28 @@
         </div>
         </details>
         <button class="play-btn" id="playBtn" type="button">JOUER EN 2v2 <span>↗</span></button>
+        <button class="play-btn play-btn-online" id="onlineOpenBtn" type="button">JOUER EN LIGNE — 2v2 <span>✦</span></button>
         <button class="modal-settings-btn" id="menuSettingsBtn" type="button">⚙ Configurer la caméra et les touches</button>
         <small>Version d’essai : les matchs restent contre l’IA. Le véritable multijoueur et Discord ne sont pas encore activés. Clique sur « Entrer » pour autoriser les sons du navigateur.</small>
       </div>
     </section>
 
+    <div id="roomBadge" class="room-badge hidden"><b id="roomBadgeText">SALON —</b><button id="roomCopy" type="button">COPIER LIEN</button><button id="roomLeave" type="button">QUITTER</button></div>
+    <section id="onlineOverlay" class="online-overlay hidden" role="dialog" aria-modal="true" aria-label="Salon multijoueur privé">
+      <div class="online-card">
+        <div class="online-kicker">VOLLEYLAB · MULTIJOUEUR PRIVÉ</div>
+        <h2>LE TERRAIN EST À VOUS.</h2>
+        <p>Invitez trois amis pour disputer un vrai match <strong>2 contre 2</strong>. Chaque participant joue depuis son navigateur.</p>
+        <label for="onlineName">Ton pseudo</label><input id="onlineName" maxlength="17" autocomplete="nickname" placeholder="Ton pseudo" value="Joueur"/>
+        <div class="online-row"><button type="button" id="onlineCreate">Créer un salon</button><span>ou</span><input id="onlineCode" maxlength="6" spellcheck="false" placeholder="CODE" aria-label="Code du salon"/><button type="button" id="onlineJoin">Rejoindre</button></div>
+        <div id="onlineStatus" role="status" class="online-status">Choisis « Créer un salon » pour inviter tes amis.</div>
+        <div id="roomInfo" class="hidden"><div class="room-code"><span>CODE DE TON SALON</span><strong id="roomCode">------</strong><button id="onlineCopy" type="button">Copier l'invitation</button></div>
+          <div class="room-teams"><div><b>🔵 BLEUS</b><span id="roomBlue">En attente · En attente</span></div><div><b>🔴 ROUGES</b><span id="roomRed">En attente · En attente</span></div></div>
+          <p class="room-hint">Le match démarre automatiquement dès que les quatre joueurs ont rejoint.</p>
+        </div>
+        <div class="online-footer"><button id="onlineClose" type="button">← Retour</button><span>Version de test · Pas de classement</span></div>
+      </div>
+    </section>
     <div id="bindCapture" class="bind-capture hidden" role="dialog" aria-modal="true" aria-label="Attribuer une commande">
       <div class="capture-card"><div class="capture-icon">⌨ + 🖱</div><span>PERSONNALISER UNE COMMANDE</span><h2 id="captureAction">PASSE</h2><p>Appuie sur une touche <b>ou clique avec le bouton de souris de ton choix</b> (gauche, droit, molette ou latéral).</p><div class="capture-buttons"><button id="cancelCapture" type="button">Annuler (Échap)</button></div><small>Le navigateur réserve certaines touches comme F5, Windows et les raccourcis système.</small></div>
     </div>

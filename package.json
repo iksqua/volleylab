@@ -1,0 +1,14 @@
+{
+  "name": "volleylab-multiplayer",
+  "version": "0.16.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check game.js",
+    "test": "node --test tests/online.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
