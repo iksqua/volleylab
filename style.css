@@ -1,0 +1,219 @@
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-synthesis:none;color:#fff;background:#152540}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}button,input{font:inherit}button{cursor:pointer}#app{position:relative;width:100vw;height:100dvh;overflow:hidden;background:linear-gradient(#65c1f0 0%,#a4e3ec 48%,#e9d09f 73%,#c49a5f 100%)}#scene{display:block;width:100%;height:100%;touch-action:none}.vignette{pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,35,63,.2),transparent 23%,transparent 67%,rgba(9,16,28,.43)),radial-gradient(ellipse at center,transparent 52%,rgba(5,20,40,.17) 100%)}.topbar{position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:22px 25px;gap:20px;pointer-events:none}.topbar>*{pointer-events:auto}.brand{display:flex;gap:12px;align-items:center;font-size:16px;font-weight:900;letter-spacing:.075em;text-shadow:0 1px 5px #173c62}.brand-mark{display:grid;place-items:center;background:#142b47;border:2px solid #ffffff80;border-radius:14px;width:43px;height:43px;font-size:23px;box-shadow:0 6px 18px #102d443b}.brand-mark span{color:#f7d26e;font-size:13px;margin-left:-3px}.brand small{display:block;color:#e7f7ffb3;font-size:10px;font-weight:750;letter-spacing:.14em;margin-top:3px}.scoreboard{position:absolute;left:50%;top:15px;transform:translateX(-50%);display:flex;align-items:stretch;background:rgba(11,27,47,.87);border:1px solid #ffffff24;border-radius:16px;box-shadow:0 12px 28px #071d2b40;overflow:hidden;min-height:59px;backdrop-filter:blur(15px)}.side{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:10px 20px;min-width:149px}.side strong{font-size:34px;line-height:1;font-weight:950;font-variant-numeric:tabular-nums}.team{font-size:11px;font-weight:900;letter-spacing:.1em}.blue{background:#1871cf40}.red{background:#da4b4340}.blue strong{color:#69c3ff}.red strong{color:#ff9a8c}.matchmeta{display:flex;align-items:center;gap:8px;background:#05192a;color:#c6d4df;padding:0 12px;font-size:10px;font-weight:800;letter-spacing:.06em;white-space:nowrap}.dividing{opacity:.3}.top-actions{display:flex;gap:8px}.top-actions button,.settings-header button{border:1px solid #ffffff37;color:white;background:rgba(16,35,57,.8);box-shadow:0 5px 14px #071d2b27;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:700;backdrop-filter:blur(12px)}.top-actions button:hover,.settings-header button:hover{background:#234d70}.top-actions kbd{opacity:.6;margin-left:8px}.toast{position:absolute;top:108px;left:50%;transform:translate(-50%,-12px);opacity:0;background:rgba(10,30,49,.88);border:1px solid #ffffff25;border-radius:12px;padding:12px 25px;font-size:17px;font-weight:900;text-align:center;letter-spacing:.02em;transition:transform .18s,opacity .18s;pointer-events:none;min-width:180px}.toast.active{opacity:1;transform:translate(-50%,0)}.controls-hint{position:absolute;top:104px;left:25px;max-width:315px;background:rgba(10,34,56,.76);border:1px solid #ffffff29;border-radius:12px;padding:11px 13px;line-height:1.85;font-size:11px;color:#dbe7f2}.controls-hint b{color:#fff;font-size:10px;letter-spacing:.07em}.controls-hint span{color:#89b8d2;margin:0 5px}.bottom-ui{position:absolute;bottom:22px;left:25px;right:25px;display:grid;grid-template-columns:minmax(250px,330px) 1fr 150px;align-items:end;gap:18px;pointer-events:none}.bottom-ui>*,.settings{pointer-events:auto}.hitpanel{background:rgba(9,26,46,.88);border:1px solid #ffffff30;border-radius:15px;padding:14px 16px;box-shadow:0 15px 25px #10233c2f;backdrop-filter:blur(10px)}.hit-title{display:flex;align-items:center;justify-content:space-between;font-size:10px;letter-spacing:.11em;font-weight:850;color:#b9d0e1}.hit-title b{font-size:16px;color:#fff}.meter{height:11px;position:relative;background:#213c59;border-radius:9px;margin:10px 0;overflow:hidden}.meter-fill{position:absolute;inset:0 auto 0 0;width:0%;background:linear-gradient(90deg,#4acfe2,#62e6ac 68%,#ffc06a 84%,#fa5f63);border-radius:9px;transition:width .06s}.sweetspot{position:absolute;left:68%;width:16%;height:100%;background:#ffffff23;border-left:1px solid #ffffff70;border-right:1px solid #ffffff70}.panel-foot{display:flex;justify-content:space-between;gap:10px;font-size:10px;color:#b5c9d7}.panel-foot span:last-child{font-weight:850;color:#e3edf5}.center-foot{text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}.aimchip{background:rgba(9,27,44,.74);padding:10px 17px;border-radius:99px;border:1px solid #ffffff29;font-size:12px;backdrop-filter:blur(6px)}.aimchip:first-letter{color:#f9dd80}.botchip{font-size:10px;letter-spacing:.05em;text-shadow:1px 2px 4px #18344b;font-weight:800}.botchip span{opacity:.6;margin:0 4px}.legend{background:rgba(9,26,46,.77);border:1px solid #ffffff24;border-radius:12px;padding:10px 12px;font-size:11px;line-height:2.4;color:#dbe5ec}.key,kbd{display:inline-flex;align-items:center;justify-content:center;border:1px solid #ffffff39;border-bottom:2px solid #ffffff60;background:#ffffff1c;min-width:24px;min-height:23px;padding:2px 6px;border-radius:5px;color:#fff;font-size:10px;font-family:inherit;font-weight:850}.legend .key{margin-right:5px}.settings{position:absolute;right:25px;top:85px;width:min(300px,calc(100vw - 40px));background:#10263bea;backdrop-filter:blur(16px);padding:18px;border:1px solid #ffffff2d;border-radius:16px;box-shadow:0 12px 40px #1122316b}.hidden{display:none!important}.settings-header{display:flex;justify-content:space-between;align-items:center;font-size:13px;letter-spacing:.07em}.settings-header button{padding:7px 10px}.settings p{color:#b0c3d4;font-size:12px}.settings label{display:block;margin:19px 0 0;color:#e6f3ff;font-size:12px;font-weight:700}.settings output{float:right;color:#79e4cf}.settings input{display:block;width:100%;margin-top:12px;accent-color:#61d7be}.reset-btn{width:100%;background:#2b88d4;color:white;border:none;border-radius:10px;padding:11px;margin-top:20px;font-size:12px;font-weight:850}.reset-btn:hover{background:#44a0e9}.modal{z-index:10;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:#07152494;backdrop-filter:blur(7px)}.modal-panel{width:min(540px,100%);padding:32px 40px;background:linear-gradient(150deg,#173855f5,#0b1f34f7);border:1px solid #ffffff30;border-radius:26px;box-shadow:0 32px 80px #071320aa;text-align:center}.eyebrow{display:inline-block;font-weight:900;font-size:10px;color:#67e2c2;letter-spacing:.21em;border:1px solid #5fe0bb6b;background:#30a88b1c;padding:7px 13px;border-radius:99px}.volley-logo{font-size:60px;color:#fbd47e;line-height:1.3;text-shadow:0 10px 28px #e39a255e}h1{font-size:clamp(28px,5vw,42px);line-height:1.08;letter-spacing:-.035em;margin:5px 0 15px;font-weight:1000}h1 em{color:#79dfdd;font-style:normal}.modal-panel p{font-size:14px;line-height:1.7;color:#c1d5e1;margin:0 auto 24px;max-width:420px}.modal-panel p strong{color:#fff}.tutorial{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:24px;text-align:left}.tutorial div{display:flex;align-items:center;gap:5px;background:#ffffff0c;border:1px solid #ffffff13;border-radius:10px;padding:11px 10px}.tutorial span{font-size:11px;color:#d2e2eb;margin-left:auto;text-align:right}.play-btn{border:0;color:#063043;background:linear-gradient(95deg,#88efc2,#4fdbc5);font-weight:1000;letter-spacing:.045em;border-radius:12px;width:100%;padding:17px 19px;box-shadow:0 9px 27px #36bba84d}.play-btn span{font-size:19px;margin-left:12px}.play-btn:hover{filter:brightness(1.08)}.modal-panel>small{display:block;margin-top:13px;color:#8bafbe;font-size:10px}.fallback{position:absolute;inset:0;background:#0e2236;color:#fff;display:grid;place-content:center;padding:20px;text-align:center;z-index:100}@media(max-width:950px){.brand{font-size:12px}.brand-mark{width:35px;height:35px}.topbar{padding:13px}.scoreboard{top:67px;min-height:48px}.scoreboard .side{min-width:100px;padding:7px 10px;gap:12px}.side strong{font-size:26px}.team{font-size:9px}.matchmeta{font-size:8px}.top-actions button{padding:8px}.top-actions button span,.top-actions kbd{display:none}.controls-hint{display:none}.bottom-ui{left:10px;right:10px;bottom:10px;grid-template-columns:1fr 1fr;gap:8px}.legend{display:none}.hitpanel{padding:10px}.center-foot{font-size:10px}.aimchip{padding:9px;font-size:10px}.botchip{font-size:9px}.modal-panel{padding:24px 20px}}@media(max-width:450px){.scoreboard{top:60px}.top-actions{margin-left:auto}.brand small{font-size:8px}.center-foot{justify-content:end}.tutorial span{font-size:9px}.tutorial div{padding:8px 6px}.tutorial kbd{font-size:8px;min-width:18px;min-height:20px}}
+
+/* V0.2 : panneau de personnalisation caméra + clavier */
+.settings{z-index:30;width:min(370px,calc(100vw - 24px));max-height:calc(100dvh - 105px);overflow-y:auto;overscroll-behavior:contain;padding:18px;scrollbar-color:#5e809a #13263b;scrollbar-width:thin}
+.settings p{line-height:1.5;margin:8px 0 14px}
+.settings-section{padding:15px 0;border-top:1px solid #ffffff22}
+.settings-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:7px}
+.settings-title span{font-size:12px;font-weight:950;letter-spacing:.1em;color:#8de8d5}
+.settings-title small{color:#9fb6c9;font-size:10px}
+.settings-section label{margin:15px 0 0;display:block}
+.settings-section input[type=range]{width:100%;margin:9px 0 2px;accent-color:#66e1c4}
+.settings output{color:#94f3d0;font-variant-numeric:tabular-nums}
+.range-labels{display:flex;justify-content:space-between;font-size:10px;color:#94aebf}
+.subtle-btn,.preset-btn,.bind-btn,.modal-settings-btn{border:1px solid #ffffff39;color:#eaf4fb;background:#ffffff13;border-radius:9px;font-weight:850}
+.subtle-btn{width:100%;font-size:11px;padding:10px;margin-top:12px}
+.subtle-btn:hover,.preset-btn:hover,.bind-btn:hover,.modal-settings-btn:hover{background:#ffffff28}
+.preset-row{display:flex;gap:8px;margin:12px 0}
+.preset-btn{flex:1;padding:10px 7px;font-size:11px}
+.preset-btn.active{background:#2b786d;border-color:#69e2c8;color:#fff}
+.binding-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.binding-row{display:flex;align-items:center;gap:7px;justify-content:space-between;padding:7px;background:#07182966;border:1px solid #ffffff16;border-radius:9px;min-width:0}
+.binding-row>span{font-size:10px;font-weight:750;color:#d3e5ef;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bind-btn{padding:7px 5px;font-size:11px;min-width:56px;max-width:81px;white-space:nowrap;flex-shrink:0}
+.bind-btn.listening{background:#1e6c63;border-color:#87f9d5;box-shadow:0 0 0 2px #5df0d23a;animation:keyPulse 1s infinite}
+@keyframes keyPulse{50%{filter:brightness(1.25)}}
+.settings p.bind-message{font-size:10px;margin:10px 0 2px;color:#add0e2;min-height:30px}
+.mouse-note{margin-top:12px;padding:11px;border-radius:9px;background:#07182987;font-size:10px;line-height:1.65;color:#bed5e6}
+.modal-settings-btn{width:100%;padding:12px;margin-top:10px;font-size:12px}
+@media(max-width:950px){.settings{top:67px;right:10px;max-height:calc(100dvh - 78px)}.binding-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.binding-grid{grid-template-columns:1fr}.settings-title{gap:4px}}
+
+/* VOLLEYLAB 0.3 — nouvelles commandes, capture et feedback des gestes */
+.action-banner{position:absolute;z-index:5;left:50%;top:31%;transform:translate(-50%,-20px) scale(.92);opacity:0;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;padding:13px 28px;border:1px solid #ffe49b9b;background:#102f45dd;border-radius:14px;box-shadow:0 6px 40px #f5b84b44;text-align:center;transition:opacity .15s,transform .16s;white-space:nowrap}
+.action-banner.active{opacity:1;transform:translate(-50%,0) scale(1)}
+.action-banner strong{font-size:clamp(20px,3vw,34px);font-weight:1000;color:#ffecae;letter-spacing:.06em;text-shadow:0 2px 14px #ffc56966}
+.action-banner span{font-size:12px;color:#fff5d9;font-weight:800;letter-spacing:.12em}
+.smash-ready{position:absolute;z-index:4;left:50%;bottom:124px;transform:translateX(-50%);padding:8px 14px;background:#112f46dc;border:1px solid #ffffff2d;border-radius:999px;color:#ccebf8;letter-spacing:.065em;font-size:10px;font-weight:900;white-space:nowrap;pointer-events:none;transition:all .12s}
+.smash-ready.ready{background:#226a54f0;border-color:#90f8c9;color:#f6ffdc;box-shadow:0 0 20px #86fbd065;font-size:12px}
+.bind-capture{position:absolute;inset:0;z-index:90;background:#06111dec;display:grid;place-items:center;padding:20px;cursor:crosshair}
+.capture-card{max-width:430px;width:100%;background:linear-gradient(140deg,#183d54,#091d30);border:1px solid #5ae5c084;box-shadow:0 20px 80px #000a;border-radius:20px;padding:32px;text-align:center;cursor:default}
+.capture-icon{font-size:32px;margin-bottom:10px}.capture-card>span{color:#77e7d5;font-size:11px;letter-spacing:.14em;font-weight:900}.capture-card h2{font-size:30px;margin:12px 0;color:#fff}.capture-card p{font-size:14px;line-height:1.65;color:#d8e7f4}.capture-card small{font-size:10px;color:#a4bbc9;display:block;margin-top:16px;line-height:1.55}.capture-buttons button{border:1px solid #ffffff50;background:#224f69;color:white;padding:10px 20px;border-radius:9px;font-size:13px;font-weight:900}
+@media(max-width:950px){.smash-ready{bottom:92px;font-size:9px;max-width:80vw;overflow:hidden;text-overflow:ellipsis}.action-banner{top:26%}.top-actions button:nth-child(3){display:inline-block}}
+
+/* VOLLEYLAB 0.4 — information de contrôle de saut / inertie */
+.jump-status{position:absolute;z-index:3;bottom:166px;left:50%;transform:translateX(-50%);padding:7px 13px;background:#0d2941e9;color:#dff3fe;border:1px solid #b1e1eb55;border-radius:99px;font-size:10px;letter-spacing:.045em;font-weight:850;white-space:nowrap;pointer-events:none;box-shadow:0 3px 18px #0003}
+.jump-status.boost{background:#876025e8;color:#fff3bb;border-color:#fff3ae}.jump-status.airborne{background:#116a6ce8;color:#f7fce9;border-color:#afffdb}
+@media(max-width:950px){.jump-status{bottom:123px;font-size:9px;max-width:90vw;overflow:hidden;text-overflow:ellipsis}}
+
+/* VOLLEYLAB V0.8 — contrôles sonores */
+.sound-previews{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:13px}
+.sound-previews button{padding:9px 5px;min-height:36px;border:1px solid #79e7d269;border-radius:8px;background:#143b52;color:#edfaff;font-size:10px;font-weight:850}
+.sound-previews button:hover,.sound-previews button:focus-visible{background:#226c73;outline:1px solid #a5f7e6}
+.sound-settings .sound-info{font-size:10px;color:#8eb3c2;margin-top:6px}
+#soundBtn[aria-pressed="false"]{opacity:.65;filter:saturate(.5)}
+
+/* VOLLEYLAB 0.9 — panneau de service, sans masquer le terrain central */
+.serve-panel{position:absolute;z-index:3;right:24px;top:113px;width:min(310px,calc(100vw - 40px));padding:17px 19px 16px;border-radius:16px;border:1px solid #d3fff36c;background:linear-gradient(135deg,#0a3046f0,#0f2639e8);box-shadow:0 16px 48px #0a253c73;backdrop-filter:blur(10px);pointer-events:none}
+.serve-eyebrow{font-size:11px;color:#7cecc8;letter-spacing:.11em;font-weight:950;margin-bottom:7px}
+.serve-panel strong{display:block;font-size:20px;line-height:1.16;letter-spacing:-.02em;color:white}
+.serve-panel p{margin:11px 0 10px;color:#dfecf2;font-size:12px;line-height:1.65}
+.serve-timer{font-size:11px;color:#b1d9e1;font-weight:750;border-top:1px solid #ffffff1d;padding-top:10px}
+.serve-panel.red-serving{border-color:#f9a69e72;background:linear-gradient(135deg,#4c2534ed,#17293dec)}
+.serve-panel.red-serving .serve-eyebrow{color:#ffaca1}
+@media(max-width:900px){.serve-panel{top:112px;right:12px;width:235px;padding:12px 13px}.serve-panel strong{font-size:16px}.serve-panel p{font-size:11px}.top-actions button span{display:none}}
+@media(max-width:600px){.serve-panel{top:190px;right:9px;width:190px}.serve-panel strong{font-size:14px}.serve-eyebrow{font-size:9px}}
+
+/* Barre compacte : ne recouvre pas le score du match. */
+.top-actions button span{display:none}
+.top-actions button{padding:9px 10px;font-size:14px}
+.top-actions{gap:6px}
+.top-actions kbd{margin-left:3px;min-width:18px;font-size:9px;padding:1px 4px}
+@media(max-width:900px){.topbar{padding:12px 12px}.top-actions button{padding:8px 7px}.top-actions kbd{display:none}.brand{font-size:12px}.brand-mark{width:33px;height:33px}}
+
+/* Le viseur est libre sur le sable adverse. Hors des lignes : avertissement visuel. */
+.aimchip.out-aim{border-color:#ff9882aa;background:rgba(84,31,28,.87);color:#ffe0d3;box-shadow:0 2px 14px #ff7b5733}
+
+/* VOLLEYLAB V0.11 — bulles de dialogue au-dessus du nom du joueur. */
+/* L'ancienne bannière gigantesque d'action n'est plus utilisée. */
+.action-banner{display:none!important}
+.player-label{
+ position:absolute;z-index:5;transform:translate(-50%,-50%);pointer-events:none;
+ font:900 10px/1.2 system-ui,-apple-system,sans-serif;color:#fff;
+ text-shadow:0 1px 5px #16344d;letter-spacing:.055em;
+ padding:3px 8px;border-radius:12px;border:1px solid #ffffff77;
+ white-space:nowrap;will-change:left,top;
+}
+.player-label.team-blue{background:#1a67aaca}
+.player-label.team-red{background:#a9393dd6}
+.player-name{display:block}
+.player-speech{
+ position:absolute;left:50%;bottom:calc(100% + 7px);
+ transform:translate(-50%,5px) scale(.95);transform-origin:50% 100%;
+ display:block;max-width:128px;white-space:nowrap;
+ opacity:0;visibility:hidden;pointer-events:none;
+ padding:5px 8px 6px;border-radius:9px;
+ color:#193c4c;background:#fffdf1;border:1px solid #eddfaf;
+ box-shadow:0 4px 11px #112b4261;
+ text-shadow:none;font:850 10px/1.1 system-ui,-apple-system,sans-serif;letter-spacing:.025em;
+ transition:opacity .12s ease,transform .12s ease,visibility .12s;
+}
+.player-speech::after{
+ content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%) rotate(45deg);
+ width:8px;height:8px;background:#fffdf1;border-right:1px solid #eddfaf;border-bottom:1px solid #eddfaf;
+}
+.player-speech.speaking{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1)}
+.player-label.team-red .player-speech{background:#fff1ed;border-color:#f2c7bf;color:#7d3b32}
+.player-label.team-red .player-speech::after{background:#fff1ed;border-color:#f2c7bf}
+@media(max-width:650px){.player-speech{font-size:9px;padding:4px 6px}.player-label{font-size:9px}}
+
+/* VOLLEYLAB V0.13 — formats de match et avant-goût des divisions */
+.modal{overflow:auto;align-items:flex-start;scrollbar-width:thin}
+.modal-panel{width:min(710px,100%);max-width:100%;margin:auto;text-align:center;padding:27px 34px}
+.modal-panel #modalDesc{font-size:12px;line-height:1.55;max-width:590px;margin:12px auto 15px}
+.mode-select{margin:14px 0 12px;padding:13px;border:1px solid #8ce5d34d;border-radius:14px;background:#0b2236a3;text-align:left}
+.mode-heading,.rank-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mode-heading strong,.rank-heading b{font-size:11px;font-weight:950;letter-spacing:.1em;color:#b6fff0}
+.mode-heading span{font-size:10px;font-weight:850;color:#a4c3d2}
+.mode-buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.mode-btn{padding:12px 4px 10px;border:1px solid #ffffff31;border-radius:10px;background:#1c3d57;color:#f5faff;transition:background .12s,border-color .12s}
+.mode-btn:hover,.mode-btn:focus-visible{outline:none;border-color:#69e7cd;background:#23556d}
+.mode-btn.selected{background:#226a67;border-color:#a5ffe8;box-shadow:inset 0 0 0 1px #9cfff35d,0 0 15px #55f0cb26}
+.mode-btn b{font-size:21px;display:block;letter-spacing:-.02em;line-height:1.1}
+.mode-btn small{display:block;font-size:9px;font-weight:850;color:#c6dce6;margin-top:5px;letter-spacing:.07em}
+.mode-select .mode-note{margin:10px 1px 0!important;font-size:11px!important;color:#bcdde5;line-height:1.45}
+.rank-preview{margin:10px 0 18px;border:1px solid #ffffff24;background:#0a21349d;border-radius:13px;padding:13px 15px;text-align:left}
+.rank-soon{font-size:9px;border-radius:999px;background:#425466;color:#d0e3ed;padding:5px 9px;font-weight:850;letter-spacing:.06em}
+.rank-track{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 9px}
+.rank-track .tier{padding:6px 9px;border-radius:7px;font-size:10px;font-weight:900;white-space:nowrap;border:1px solid #ffffff25;background:#233b50}
+.rank-track .sand{color:#f3d8a4}.rank-track .bronze{color:#eab38d}.rank-track .silver{color:#dfe8f4}.rank-track .gold{color:#ffe382}.rank-track .platinum{color:#78e9d5}.rank-track .diamond{color:#a0c7ff}.rank-track .elite{color:#e0afff}
+.rank-preview p{font-size:10.5px;color:#afcddd;line-height:1.5;margin:0}
+.rank-preview strong{color:#e4f6ff}
+.modal-panel .tutorial{gap:5px;margin-bottom:15px}
+.modal-panel .tutorial div{padding:7px 8px}
+@media(max-width:750px){.modal-panel{padding:22px 16px}.mode-btn b{font-size:18px}.rank-track .tier{font-size:9px;padding:5px 7px}}
+@media(max-width:490px){.mode-select{padding:10px}.mode-buttons{gap:4px}.mode-btn{padding:9px 2px}.mode-btn b{font-size:16px}.mode-btn small{font-size:8px}.modal-panel .tutorial{grid-template-columns:1fr 1fr}.rank-preview{padding:11px}}
+
+/* Ouvrir les commandes à la demande plutôt que bloquer l’accès au bouton Jouer. */
+.tutorial-details{margin:9px 0 12px;text-align:left}
+.tutorial-details summary{cursor:pointer;list-style:none;border-radius:9px;background:#ffffff0f;border:1px solid #ffffff27;padding:10px 13px;color:#b7dbec;font-size:11px;font-weight:850;letter-spacing:.025em}
+.tutorial-details summary::-webkit-details-marker{display:none}
+.tutorial-details summary::after{content:'⌄';float:right;font-size:14px}
+.tutorial-details[open] summary::after{content:'⌃'}
+.tutorial-details .tutorial{margin-top:10px}
+
+/* VOLLEYLAB 0.14 — aides structurées dans les côtés hauts du terrain. */
+.control-guide{
+ position:absolute;z-index:2;top:91px;width:268px;pointer-events:none;
+ padding:15px 15px 12px;background:rgba(8,31,49,.86);backdrop-filter:blur(15px);
+ border:1px solid rgba(174,233,241,.30);border-radius:15px;color:#effaff;
+ box-shadow:0 9px 32px rgba(5,17,31,.26),inset 0 1px 0 #ffffff20;
+}
+.guide-left{left:24px;border-top:3px solid #7ce8e5}
+.guide-right{right:24px;width:318px;border-top:3px solid #f9cf75}
+.guide-heading{display:flex;align-items:center;gap:10px;padding-bottom:11px;margin-bottom:5px;border-bottom:1px solid rgba(212,240,255,.13)}
+.guide-icon{display:grid;place-items:center;width:34px;height:34px;background:#ffffff15;border:1px solid #ffffff23;border-radius:10px;font-size:17px;flex:none}
+.guide-heading small{display:block;font-size:9px;font-weight:800;letter-spacing:.14em;color:#a2c7dc;margin-bottom:3px}
+.guide-heading strong{display:block;font-size:13px;font-weight:950;letter-spacing:.06em;color:#fff}
+.guide-rows{display:flex;flex-direction:column;gap:3px}
+.guide-row{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:8px;padding:8px 5px 8px 6px;min-height:35px}
+.guide-row:nth-child(even){background:rgba(255,255,255,.045)}
+.guide-action{font-size:11px;font-weight:850;line-height:1.15;color:#f2fcff}
+.guide-action small{display:block;font-size:9px;font-weight:600;color:#b3cbd8;margin-top:3px;white-space:nowrap}
+.control-guide kbd{background:rgba(176,217,241,.16);border:1px solid rgba(255,255,255,.32);border-bottom:2px solid rgba(255,255,255,.52);padding:4px 7px;min-width:45px;min-height:26px;text-align:center;border-radius:6px;font-size:10.5px;font-weight:850;color:#fff;white-space:nowrap}
+.guide-right kbd{border-color:rgba(251,215,134,.44);background:rgba(251,215,134,.13)}
+.guide-group-label{display:flex;justify-content:space-between;gap:6px;align-items:center;margin:12px 2px 5px;color:#ffd78f;font-weight:950;font-size:10px;letter-spacing:.10em}
+.guide-group-label span{letter-spacing:0;font-size:9px;font-weight:700;color:#a7c5d8}
+.guide-group-label.pass{color:#8ee9d8}
+.guide-row.important{background:rgba(255,196,102,.12);outline:1px solid rgba(255,215,142,.22)}
+.guide-tip{color:#a9cbdb;font-size:9.5px;line-height:1.45;margin:9px 3px 1px}
+/* Le panneau de service prend la place du panneau des frappes pendant un engagement. */
+.serve-panel{top:91px;right:24px;width:318px}
+.settings{z-index:12}
+@media(max-width:1100px){
+ .control-guide{top:116px;width:236px;padding:11px}
+ .guide-right{width:272px}
+ .guide-row{padding:6px 4px;min-height:31px}
+ .control-guide kbd{font-size:9.2px;padding:4px 5px;min-width:32px}
+ .guide-heading strong{font-size:11px}
+ .guide-action{font-size:10px}
+ .guide-action small{font-size:8px}
+ .serve-panel{top:116px;width:272px}
+}
+@media(max-width:950px){
+ .control-guide{display:block;top:128px}
+ .guide-left{left:12px}
+ .guide-right{right:12px}
+ .serve-panel{top:128px;right:12px}
+}
+@media(max-height:665px){
+ .control-guide{padding:9px 11px 8px}
+ .guide-heading{padding-bottom:6px;margin-bottom:1px}
+ .guide-row{min-height:27px;padding:4px 3px}
+ .guide-group-label{margin:6px 2px 2px}
+ .guide-tip{font-size:8.5px;margin-top:5px}
+}
+@media(max-width:670px){
+ .control-guide{width:calc(50% - 15px);top:134px;padding:8px 6px}
+ .guide-left{left:8px}
+ .guide-right{right:8px}
+ .guide-heading{gap:5px}
+ .guide-icon{display:none}
+ .guide-heading strong{font-size:10px}
+ .guide-heading small{font-size:8px}
+ .guide-row{padding:4px 2px;gap:3px}
+ .control-guide kbd{font-size:8px;min-width:25px;padding:3px}
+ .guide-action{font-size:9px}
+ .guide-action small,.guide-group-label span,.guide-tip{display:none}
+ .serve-panel{top:134px;right:8px;width:calc(50% - 15px)}
+}
+
+/* V0.15 — tutorial OFF by default, compact optional control. */
+#helpToggle{display:grid;place-items:center;min-width:36px;height:36px;font-weight:950;font-size:17px;border-radius:9px;color:#c5e6f5}
+#helpToggle:hover,#helpToggle.active{border-color:#8fefd6;background:#1e665e;color:#fff}
+.help-option-row{display:flex!important;align-items:center;justify-content:space-between;gap:14px;margin:10px 0!important;padding:13px;border:1px solid #ffffff2b;border-radius:10px;background:#102e45b8;cursor:pointer}
+.help-option-row span{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.help-option-row b{font-size:12px;line-height:1.35}
+.help-option-row small{font-size:10px;line-height:1.4;color:#bbd2df}
+.help-option-row input[type=checkbox]{width:20px!important;height:20px!important;accent-color:#58e5c2;flex:none;cursor:pointer;margin:0!important}
+.settings p.help-option-note{font-size:10px;line-height:1.5;margin:8px 0 2px}

@@ -1,0 +1,8 @@
+# VOLLEYLAB — déploiement gratuit du prototype solo sur Render.
+# Utiliser un nouveau service indépendant des autres projets.
+services:
+  - type: web
+    name: volleylab-playtest
+    runtime: static
+    buildCommand: echo "VOLLEYLAB static files ready"
+    staticPublishPath: .

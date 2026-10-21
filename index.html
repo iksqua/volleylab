@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="theme-color" content="#101b30"/>
+  <title>VOLLEYLAB V0.15 — Aide facultative</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <main id="app">
+    <canvas id="scene" aria-label="Terrain de volleyball en 3D"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">V<span>●</span></span><span>VOLLEYLAB <small>PLAYTEST 0.15</small></span></div>
+      <div class="scoreboard" aria-live="polite">
+        <div class="side blue"><span class="team">BLEUS</span><strong id="scoreBlue">0</strong></div>
+        <div class="matchmeta"><span id="status">PREMIER SET</span><span class="dividing">/</span><span id="scoreMode">2v2</span><span class="dividing">/</span><span>7 PTS</span></div>
+        <div class="side red"><strong id="scoreRed">0</strong><span class="team">ROUGES</span></div>
+      </div>
+      <div class="top-actions"><button id="cameraBtn" type="button" title="Régler la caméra">◉ <span id="camLabel">Vue arrière</span></button><button id="servePracticeBtn" type="button" aria-label="Recommencer un service manuel">🏐 <span>Service</span> <kbd id="servePracticeBtnKey">H</kbd></button><button id="practiceBtn" type="button" aria-label="Faire venir un ballon pour tester une frappe">🎯 <span>Balle test</span> <kbd id="practiceBtnKey">B</kbd></button><button id="smashPracticeBtn" type="button" aria-label="Lancer une balle haute pour tester le smash">💥 <span>Tester smash</span> <kbd id="smashPracticeBtnKey">G</kbd></button><button id="soundBtn" type="button" aria-label="Couper les sons" aria-pressed="true" title="Couper les sons">🔊</button><button id="helpToggle" type="button" aria-label="Afficher les commandes" aria-pressed="false" title="Afficher le tutoriel des commandes">?</button><button id="settingsBtn" type="button" aria-label="Réglages">⚙</button></div>
+    </header>
+
+    <div id="toast" class="toast" role="status"></div>
+    <!-- Les tutoriels sont désactivés par défaut ; activation via ? ou Options. -->
+    <aside class="control-guide guide-left hidden" id="controlsLeft" aria-label="Tutoriel des déplacements">
+      <div class="guide-heading"><span class="guide-icon">⌨</span><div><small>PRISE EN MAIN</small><strong>DÉPLACEMENTS</strong></div></div>
+      <div class="guide-rows">
+        <div class="guide-row"><span class="guide-action">Se déplacer</span><kbd id="movementLabel">↑ ← ↓ →</kbd></div>
+        <div class="guide-row"><span class="guide-action">Sauter</span><kbd id="jumpHint">Espace</kbd></div>
+        <div class="guide-row"><span class="guide-action">Grand saut <small>2 appuis rapides</small></span><kbd id="jumpBoostHint">×2 Espace</kbd></div>
+        <div class="guide-row"><span class="guide-action">S'accroupir</span><kbd id="crouchHint">Maj G</kbd></div>
+        <div class="guide-row"><span class="guide-action">Plonger</span><kbd id="diveHint">Ctrl</kbd></div>
+      </div>
+      <p class="guide-tip">↗ En l'air, ton élan reste verrouillé.</p>
+    </aside>
+
+    <aside class="control-guide guide-right hidden" id="controlsRight" aria-label="Tutoriel des frappes et des passes">
+      <div class="guide-heading"><span class="guide-icon">🖱</span><div><small>MAÎTRISER LA BALLE</small><strong>FRAPPES & PASSES</strong></div></div>
+      <div class="guide-group-label">ATTAQUE <span>Clic gauche par défaut</span></div>
+      <div class="guide-rows">
+        <div class="guide-row"><span class="guide-action">FRAPPE <small>1 clic</small></span><kbd id="hitHint">Clic G</kbd></div>
+        <div class="guide-row"><span class="guide-action">LOB <small>Double clic</small></span><kbd id="lobHint">×2 Clic G</kbd></div>
+        <div class="guide-row important"><span class="guide-action">SMASH <small>Grand saut + frappe</small></span><kbd id="smashHint">×2 Espace + Clic G</kbd></div>
+        <div class="guide-row"><span class="guide-action">SMASH LOBÉ <small>Grand saut + double clic</small></span><kbd id="smashLobHint">×2 Espace + ×2 Clic G</kbd></div>
+      </div>
+      <div class="guide-group-label pass">JEU D'ÉQUIPE <span>Clic droit par défaut</span></div>
+      <div class="guide-rows">
+        <div class="guide-row"><span class="guide-action">PASSE <small>1 clic</small></span><kbd id="passHint">Clic D</kbd></div>
+        <div class="guide-row"><span class="guide-action">PASSE LOBÉE <small>Double clic</small></span><kbd id="passLobHint">×2 Clic D</kbd></div>
+      </div>
+      <p class="guide-tip">Maintiens la frappe pour charger la puissance · Vise à la souris.</p>
+    </aside>
+    <aside class="serve-panel hidden" id="servePanel" role="status" aria-live="polite">
+      <div class="serve-eyebrow" id="serveEyebrow">🏐 SERVICE BLEU</div>
+      <strong id="serveTitle">À TOI DE SERVIR</strong>
+      <p id="serveHelp">Espace : lancer la balle · Clic gauche : frapper</p>
+      <div class="serve-timer" id="serveTimer">Vise librement sur le sable adverse à la souris.</div>
+    </aside>
+    <div id="jumpStatus" class="jump-status">↟ DOUBLE APPUI SAUT : GRAND SAUT · ÉLAN VERROUILLÉ EN L’AIR</div>
+    <div id="smashReady" class="smash-ready" aria-live="off">⚡ DOUBLE SAUT + FRAPPE = SMASH</div>
+
+    <div class="bottom-ui">
+      <section class="hitpanel">
+        <div class="hit-title"><span id="powerTitle">PUISSANCE DE FRAPPE</span><b id="powerVal">0%</b></div>
+        <div class="meter"><div id="powerFill" class="meter-fill"></div><div class="sweetspot"></div></div>
+        <div class="panel-foot"><span id="hitType">Clic gauche : frappe · ×2 : lob · Clic droit : passe</span><span id="ballDist">BALLON —</span></div>
+      </section>
+      <div class="center-foot"><div class="aimchip">✦ <span id="targetStatus">Vise librement sur le sable adverse à la souris</span></div><div class="botchip" id="rosterChip">2v2 <span>•</span> Toi + 1 bot contre 2 bots</div></div>
+      <section class="legend"><div><span class="key">◉</span> Caméra réglable</div><div><span id="settingsLegend" class="key">T</span> Options et touches</div><div><span id="servePracticeLegend" class="key">H</span> Retester service</div><div><span id="practiceLegend" class="key">B</span> Balle test</div><div><span id="smashPracticeLegend" class="key">G</span> Tester smash</div><div><span id="pauseLegend" class="key">P</span> Pause</div></section>
+    </div>
+
+    <aside id="settings" class="settings hidden" aria-label="Options de jeu">
+      <div class="settings-header"><b>⚙ OPTIONS DU JEU</b><button id="closeSettings" type="button" aria-label="Fermer les options">✕</button></div>
+      <p>Touches personnalisables et enregistrées dans ce navigateur. Au service : Saut lance la balle, clic gauche engage, double clic gauche sert lobé. Saut simple : frappe normale. Double appui rapide sur saut : grand saut permettant un smash avec la frappe. Double clic : version lobée de la frappe/passe (un léger délai permet de reconnaître le second clic).</p>
+      <section class="settings-section" id="helpOptions">
+        <div class="settings-title"><span>❔ AIDE AU JEU</span><small>Discrète par défaut</small></div>
+        <label class="help-option-row" for="showHelp"><span><b>Afficher les commandes en match</b><small>Deux panneaux dans les coins supérieurs, masqués au démarrage.</small></span><input type="checkbox" id="showHelp" aria-label="Afficher le tutoriel pendant le match"/></label>
+        <p class="help-option-note">Le bouton <b>?</b> en haut de l'écran permet aussi d'afficher ou de masquer l'aide instantanément.</p>
+      </section>
+      <section class="settings-section" id="cameraOptions">
+        <div class="settings-title"><span>◉ CAMÉRA</span><small>Vue arrière uniquement</small></div>
+        <label for="camDist">Distance de caméra <output id="camDistValue">12,9 m</output></label>
+        <input id="camDist" type="range" min="7" max="24" step="0.5" value="12.9" aria-label="Distance de la caméra"/>
+        <div class="range-labels"><span>Près</span><span>Loin</span></div>
+        <label for="camHeight">Hauteur de caméra <output id="camHeightValue">6,4 m</output></label>
+        <input id="camHeight" type="range" min="3" max="14" step="0.5" value="6.4" aria-label="Hauteur de la caméra"/>
+        <div class="range-labels"><span>Bas</span><span>Haut</span></div>
+        <button class="subtle-btn" id="camReset" type="button">↺ Recentrer la caméra</button>
+      </section>
+      <section class="settings-section sound-settings" id="audioOptions">
+        <div class="settings-title"><span>♫ SOUND DESIGN</span><small>Audio 3D original</small></div>
+        <label for="audioVolume">Volume des effets <output id="audioVolumeValue">72 %</output></label>
+        <input id="audioVolume" type="range" min="0" max="100" step="1" value="72" aria-label="Volume des sons de jeu"/>
+        <label for="audioAmbience">Ambiance plage <output id="audioAmbienceValue">22 %</output></label>
+        <input id="audioAmbience" type="range" min="0" max="100" step="1" value="22" aria-label="Volume de l'ambiance de plage"/>
+        <div class="sound-previews" aria-label="Essayer les effets sonores">
+          <button type="button" data-preview-sound="hit">🏐 Frappe</button>
+          <button type="button" data-preview-sound="smash">💥 Smash</button>
+          <button type="button" data-preview-sound="net">🥅 Filet</button>
+          <button type="button" data-preview-sound="ground">🏖 Rebond</button>
+          <button type="button" data-preview-sound="dive">↘ Plongeon</button>
+        </div>
+        <p id="audioNote" role="status">Les sons se déclenchent après avoir lancé le jeu.</p>
+        <p class="sound-info">Les impacts varient avec la puissance et leur position sur le terrain. Aucun fichier audio à télécharger.</p>
+      </section>
+      <section class="settings-section">
+        <div class="settings-title"><span>⌨ COMMANDES</span><small>Clic simple / double clic</small></div>
+        <div class="preset-row">
+          <button class="preset-btn" id="presetArrows" type="button">← ↑ ↓ → Flèches</button>
+          <button class="preset-btn" id="presetZqsd" type="button">ZQSD</button>
+        </div>
+        <div class="binding-grid" id="bindingGrid"></div>
+        <p id="bindMessage" class="bind-message" role="status">Choisis une commande, puis une touche ou un bouton de souris. Un appui = action simple, deux appuis = lob. Le smash s'active uniquement pendant le grand saut (double appui sur saut).</p>
+        <button class="subtle-btn" id="resetKeys" type="button">↺ Réinitialiser les touches</button>
+        <div class="mouse-note"><b>Tout est personnalisable :</b> Ctrl, Alt, Maj, touches numériques, clic gauche/droit, molette (clic), boutons latéraux de souris. Certaines touches réservées par le navigateur (Échap, Windows, F5…) ne sont pas interceptables de façon fiable. Une commande par bouton ; si besoin les commandes sont échangées. Le double clic fonctionne aussi après personnalisation.</div>
+      </section>
+      <section class="settings-section">
+        <div class="settings-title"><span>✦ PHYSIQUE</span><small>Réglages de test</small></div>
+        <label for="gravity">Gravité <output id="gravityValue">14.0</output></label><input id="gravity" type="range" min="9" max="21" step="0.5" value="14"/>
+        <label for="assist">Assistance de frappe <output id="assistValue">2.8</output></label><input id="assist" type="range" min="1.4" max="4.0" step="0.1" value="2.8"/>
+        <label for="speed">Vitesse des joueurs <output id="speedValue">8.5</output></label><input id="speed" type="range" min="5" max="12" step="0.5" value="8.5"/>
+        <label for="smash">Force des smashs <output id="smashValue">1.0</output></label><input id="smash" type="range" min="0.7" max="1.4" step="0.1" value="1"/>
+      </section>
+      <button class="subtle-btn" id="backMenuBtn" type="button">⇦ Changer de format (1v1 à 4v4)</button><button class="reset-btn" id="resetBtn" type="button">↺ Recommencer le match</button>
+    </aside>
+
+    <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.15</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
+        <p id="modalDesc">Volleyball arcade 3D : choisis le format de ton match. Les personnages cartoon de la V0.11, la caméra réglable, les frappes, le service et les commandes personnalisées sont conservés.</p>
+        <div class="mode-select" aria-label="Choix du format d’équipe">
+          <div class="mode-heading"><strong>CHOISIS TON FORMAT</strong><span>EN SOLO CONTRE DES BOTS</span></div>
+          <div class="mode-buttons" role="group" aria-label="Nombre de joueurs par équipe">
+            <button type="button" class="mode-btn" data-team-size="1"><b>1v1</b><small>DUEL</small></button>
+            <button type="button" class="mode-btn selected" data-team-size="2" aria-pressed="true"><b>2v2</b><small>DUO</small></button>
+            <button type="button" class="mode-btn" data-team-size="3"><b>3v3</b><small>TRIO</small></button>
+            <button type="button" class="mode-btn" data-team-size="4"><b>4v4</b><small>ÉQUIPE</small></button>
+          </div>
+          <p id="modeExplain" class="mode-note">2v2 : tu joues avec 1 bot contre 2 bots.</p>
+        </div>
+        <section class="rank-preview" aria-label="Aperçu des futures divisions classées">
+          <div class="rank-heading"><b>🏆 DIVISIONS</b><span class="rank-soon">PROJET · NON ACTIF</span></div>
+          <div class="rank-track" aria-label="Divisions prévues">
+            <span class="tier sand">Sable</span><span class="tier bronze">Bronze</span><span class="tier silver">Argent</span><span class="tier gold">Or</span><span class="tier platinum">Platine</span><span class="tier diamond">Diamant</span><span class="tier elite">Élite</span>
+          </div>
+          <p>Le mode classé sera réservé aux futurs matchs en ligne entre humains, principalement en 2v2. <strong>Les matchs contre des bots ne rapportent aucun point de rang.</strong></p>
+        </section>
+        <details class="tutorial-details"><summary>⌨ Toutes les commandes (affichage en match facultatif)</summary>
+        <div class="tutorial">
+          <div><kbd id="tutorialServeJump">Espace</kbd><kbd id="tutorialServeHit">Clic G</kbd><span>Service : lancer puis frapper (×2 = lobé)</span></div><div><kbd id="tutorialForward">↑</kbd><kbd id="tutorialLeft">←</kbd><kbd id="tutorialBack">↓</kbd><kbd id="tutorialRight">→</kbd><span>Déplacements</span></div>
+          <div><kbd id="tutorialJump">Espace</kbd><span>Saut simple (frappes normales) / ×2 = grand saut (smash)</span></div><div><kbd id="tutorialCrouch">Maj G</kbd><span>S’accroupir (maintenir)</span></div>
+          <div><kbd id="tutorialHit">Clic G</kbd><span>Frappe · Maintenir pour charger</span></div>
+          <div><kbd>×2</kbd><kbd id="tutorialLob">Clic G</kbd><span>Lob</span></div>
+          <div><kbd>×2</kbd><kbd id="tutorialJumpSmash">Espace</kbd><kbd>+</kbd><kbd id="tutorialSmash">Clic G</kbd><span>Smash pendant le grand saut</span></div>
+          <div><kbd>×2 saut</kbd><kbd>+</kbd><kbd>×2</kbd><kbd id="tutorialSmashLob">Clic G</kbd><span>Smash lobé pendant le grand saut</span></div>
+          <div><kbd id="tutorialPass">Clic D</kbd><span>Passe à l’équipier</span></div>
+          <div><kbd>×2</kbd><kbd id="tutorialPassLob">Clic D</kbd><span>Passe lobée</span></div>
+          <div><kbd id="tutorialServePractice">H</kbd><span>Retester un service</span></div><div><kbd id="tutorialDive">Ctrl</kbd><span>Plongeon</span></div><div><kbd id="tutorialPractice">B</kbd><span>Balle test</span></div><div><kbd id="tutorialSmashPractice">G</kbd><span>Balle haute / smash</span></div>
+        </div>
+        </details>
+        <button class="play-btn" id="playBtn" type="button">JOUER EN 2v2 <span>↗</span></button>
+        <button class="modal-settings-btn" id="menuSettingsBtn" type="button">⚙ Configurer la caméra et les touches</button>
+        <small>Version d’essai : les matchs restent contre l’IA. Le véritable multijoueur et Discord ne sont pas encore activés. Clique sur « Entrer » pour autoriser les sons du navigateur.</small>
+      </div>
+    </section>
+
+    <div id="bindCapture" class="bind-capture hidden" role="dialog" aria-modal="true" aria-label="Attribuer une commande">
+      <div class="capture-card"><div class="capture-icon">⌨ + 🖱</div><span>PERSONNALISER UNE COMMANDE</span><h2 id="captureAction">PASSE</h2><p>Appuie sur une touche <b>ou clique avec le bouton de souris de ton choix</b> (gauche, droit, molette ou latéral).</p><div class="capture-buttons"><button id="cancelCapture" type="button">Annuler (Échap)</button></div><small>Le navigateur réserve certaines touches comme F5, Windows et les raccourcis système.</small></div>
+    </div>
+    <div id="fallback" class="fallback hidden"><h2>WebGL indisponible</h2><p>Ouvre ce fichier avec une version récente de Chrome, Edge ou Firefox sur ordinateur et vérifie que l'accélération graphique est activée.</p></div>
+  </main>
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
