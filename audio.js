@@ -13,7 +13,8 @@
     dive:{duration:.58,gain:.56}, jump:{duration:.21,gain:.31},
     windup:{duration:.20,gain:.24}, land:{duration:.19,gain:.33},
     step:{duration:.14,gain:.16}, bump:{duration:.22,gain:.42},
-    score:{duration:.62,gain:.24}
+    score:{duration:.62,gain:.24},
+    pointFun:{duration:.58,gain:.43},victory:{duration:1.25,gain:.40},defeat:{duration:1.08,gain:.34}
   };
   class VolleyAudio {
     constructor(){
@@ -123,6 +124,24 @@
             +Math.sin(TAU*(type==='windup'?175:95)*t)*thump*Math.exp(-27*t);
         }else if(type==='bump'){
           s=Math.sin(TAU*(105*t-20*t*t))*.55*Math.exp(-20*t)+body*.30*Math.exp(-26*t);
+        }else if(type==='pointFun'){
+          // Petit 'boïng' amusant après le rebond gagnant, sans masquer les frappes.
+          const wobble=1+.045*Math.sin(TAU*19*t)*Math.exp(-7*t);
+          const f=440*Math.exp(-7*t)+175;
+          s=(Math.sin(TAU*(240*t+250*(1-Math.exp(-6*t))/6)*wobble)*.58
+             +Math.sin(TAU*(f*.55*t))* .18)*Math.exp(-6.5*t);
+          if(t>.24){const q=t-.24;s+=Math.sin(TAU*(660*q-180*q*q))*.26*Math.exp(-12*q);}
+        }else if(type==='victory'){
+          // Fanfare cartoon courte en trois notes ascendantes.
+          const notes=[523.25,659.25,783.99,1046.5],index=Math.min(3,Math.floor(t/.29)),q=t-index*.29;
+          const env=Math.max(0,Math.min(1,q*80))*Math.exp(-7*q);
+          s=(Math.sin(TAU*notes[index]*q)*.57+Math.sin(TAU*notes[index]*2*q)*.13)*env;
+          if(index===3)s+=Math.sin(TAU*notes[index]*.5*q)*.17*Math.exp(-2.8*q);
+        }else if(type==='defeat'){
+          // Glissando trombone rigolo, descendant (réaction des perdants).
+          const note=330*Math.exp(-1.4*t)+85;
+          s=(Math.sin(TAU*(85*t+175*(1-Math.exp(-1.4*t))/1.4))*.62
+            +Math.sin(TAU*note*t*.5)*.18)*Math.exp(-2.6*t);
         }else if(type==='score'){
           // Petit sifflet de fin de point, ni jingle agressif ni longue mélodie.
           const env=(1-Math.exp(-80*t))*Math.exp(-7*t);

@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta name="theme-color" content="#101b30"/>
-  <title>VOLLEYLAB V0.17 — Aide facultative</title>
+  <title>VOLLEYLAB V0.18 — Aide facultative</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -13,16 +13,30 @@
     <div class="vignette" aria-hidden="true"></div>
 
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">V<span>●</span></span><span>VOLLEYLAB <small>PLAYTEST 0.17</small></span></div>
+      <div class="brand"><span class="brand-mark">V<span>●</span></span><span>VOLLEYLAB <small>PLAYTEST 0.18</small></span></div>
       <div class="scoreboard" aria-live="polite">
         <div class="side blue"><span class="team">BLEUS</span><strong id="scoreBlue">0</strong></div>
-        <div class="matchmeta"><span id="status">PREMIER SET</span><span class="dividing">/</span><span id="scoreMode">2v2</span><span class="dividing">/</span><span>7 PTS</span></div>
+        <div class="matchmeta"><span id="status">PREMIER SET</span><span class="dividing">/</span><span id="scoreMode">2v2</span><span class="dividing">/</span><span>15 PTS · +2</span></div>
         <div class="side red"><strong id="scoreRed">0</strong><span class="team">ROUGES</span></div>
       </div>
       <div class="top-actions"><button id="cameraBtn" type="button" title="Régler la caméra">◉ <span id="camLabel">Vue arrière</span></button><button id="servePracticeBtn" type="button" aria-label="Recommencer un service manuel">🏐 <span>Service</span> <kbd id="servePracticeBtnKey">H</kbd></button><button id="practiceBtn" type="button" aria-label="Faire venir un ballon pour tester une frappe">🎯 <span>Balle test</span> <kbd id="practiceBtnKey">B</kbd></button><button id="smashPracticeBtn" type="button" aria-label="Lancer une balle haute pour tester le smash">💥 <span>Tester smash</span> <kbd id="smashPracticeBtnKey">G</kbd></button><button id="soundBtn" type="button" aria-label="Couper les sons" aria-pressed="true" title="Couper les sons">🔊</button><button id="helpToggle" type="button" aria-label="Afficher les commandes" aria-pressed="false" title="Afficher le tutoriel des commandes">?</button><button id="settingsBtn" type="button" aria-label="Réglages">⚙</button></div>
     </header>
 
     <div id="toast" class="toast" role="status"></div>
+    <section id="matchCelebration" class="match-celebration hidden" aria-live="polite" aria-label="Résultat du match">
+      <div class="celebration-header">
+        <span class="celebration-icon" aria-hidden="true">🏆</span>
+        <small>FIN DU MATCH · 15 POINTS · 2 POINTS D’ÉCART</small>
+        <strong id="celebrationTeam">LES BLEUS</strong>
+        <span class="celebration-win">REMPORTENT LA PARTIE !</span>
+        <b id="celebrationResult">15 — 8</b>
+        <span id="celebrationSub">LES GAGNANTS DANSENT · LES PERDANTS PLEURENT !</span>
+        <span id="celebrationFooter">LA REVANCHE ARRIVE…</span>
+      </div>
+      <div class="celebration-confetti" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </section>
     <!-- Les tutoriels sont désactivés par défaut ; activation via ? ou Options. -->
     <aside class="control-guide guide-left hidden" id="controlsLeft" aria-label="Tutoriel des déplacements">
       <div class="guide-heading"><span class="guide-icon">⌨</span><div><small>PRISE EN MAIN</small><strong>DÉPLACEMENTS</strong></div></div>
@@ -107,10 +121,13 @@
           <button type="button" data-preview-sound="smash">💥 Smash</button>
           <button type="button" data-preview-sound="net">🥅 Filet</button>
           <button type="button" data-preview-sound="ground">🏖 Rebond</button>
+          <button type="button" data-preview-sound="pointFun">🤪 Point gagnant</button>
+          <button type="button" data-preview-sound="victory">🏆 Victoire</button>
+          <button type="button" data-preview-sound="defeat">😢 Défaite</button>
           <button type="button" data-preview-sound="dive">↘ Plongeon</button>
         </div>
         <p id="audioNote" role="status">Les sons se déclenchent après avoir lancé le jeu.</p>
-        <p class="sound-info">Les impacts varient avec la puissance et leur position sur le terrain. Aucun fichier audio à télécharger.</p>
+        <p class="sound-info">Un rebond gagnant déclenche un petit boïng. Fanfare et sons comiques de fin de match, réglables sans fichiers externes.</p>
       </section>
       <section class="settings-section">
         <div class="settings-title"><span>⌨ COMMANDES</span><small>Clic simple / double clic</small></div>
@@ -134,7 +151,7 @@
     </aside>
 
     <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.17</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
+      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.18</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
         <p id="modalDesc">Volleyball arcade 3D : choisis le format de ton match. Les personnages cartoon de la V0.11, la caméra réglable, les frappes, le service et les commandes personnalisées sont conservés.</p>
         <div class="mode-select" aria-label="Choix du format d’équipe">
           <div class="mode-heading"><strong>CHOISIS TON FORMAT</strong><span>EN SOLO CONTRE DES BOTS</span></div>
