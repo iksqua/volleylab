@@ -1,51 +1,27 @@
-# VOLLEYLAB V0.16 — Playtest multijoueur privé (2v2)
+# VOLLEYLAB V0.17 — fluidité du 2v2 en ligne
 
-Cette version ajoute **des salons privés de 4 joueurs humains** à l'arcade volleyball 3D. Une partie contre des bots reste accessible hors ligne dans les modes 1v1 à 4v4.
+Cette version conserve le prototype V0.16 et les salons privés, avec ces améliorations :
 
-## Fonctionnalités testables
+- **30 états serveur/seconde** (anciennement 20) ; simulation serveur toujours à 60 Hz.
+- **Interpolation des joueurs distants et du ballon** entre les états reçus pour éviter les à-coups.
+- **Prédiction du déplacement, du saut et du plongeon local** pour répondre au clavier immédiatement. La physique officielle et les scores restent validés par le serveur.
+- **Correction douce** des écarts avec le serveur, même si la connexion présente de la latence.
+- **Mesure du ping et des FPS** dans `Options → Fluidité`.
+- **Qualité graphique automatique** : baisse progressive de la résolution si la fréquence d'images ralentit ; modes Performance / Qualité sélectionnables.
+- Modes solo et aide masquée par défaut conservés.
 
-- Salon privé avec code à 6 caractères et lien d'invitation
-- 2 bleus et 2 rouges, automatiquement assignés dans l'ordre d'arrivée
-- Départ automatique dès que les quatre places sont remplies
-- Déplacements, accroupissement, plongeon, saut normal/grand saut (double pression), frappe/passe/lob/smash
-- Ballon, filet, fautes, trois touches par équipe, service et score **simulés par le serveur**
-- Même état de la balle partagé à 20 mises à jour par seconde
-- Retour au salon si un participant se déconnecte
-- Première à 7 points puis redémarrage de l'entraînement
+## Déploiement Render
 
-Les salons vivent en mémoire : leur code expire quand tous les joueurs quittent, ou quand l'hébergement redémarre. Les divisions ne sont pas encore actives, et **les résultats ne sont pas enregistrés**.
+Le service `volleylab-online` pointe vers le dépôt `iksqua/volleylab`, branche `main`, Node >=22, commande `npm start`.
+Remplacer les fichiers de la racine GitHub par ceux de ce dossier (`index.html`, `style.css`, `game.js`, `server.mjs`, `audio.js`, `package.json`, `README.md`, `tests/online.test.mjs`). L'ancienne `render.yaml` peut rester.
+Le déploiement automatique de Render devrait redémarrer après un nouveau commit.
 
-## Publication sur Render (offre gratuite)
+L'URL reste `https://volleylab-online.onrender.com`. Il n'est pas nécessaire de créer un autre service ni d'acheter un hébergement.
 
-L'ancienne URL `volleylab-playtest.onrender.com` reste réservée au prototype solo V0.15.
-Pour V0.16, utiliser un **nouveau Web Service** Render en plan `free`, région Francfort :
+## Limites
 
-- **Repository** : `https://github.com/iksqua/volleylab`
-- **Branch** : `main`
-- **Runtime** : Node
-- **Build command** : `npm install --omit=dev`
-- **Start command** : `npm start`
-- **Node** : 22 ou supérieur
-- **Root directory** : répertoire racine
+Cette optimisation ne garantit pas 60 FPS sur tous les ordinateurs ou toutes les connexions. La balle est affichée légèrement en retard (tampon d'interpolation ~100 ms) pour améliorer sa fluidité, tandis que le déplacement du joueur local utilise la prédiction. Un seul serveur Render gratuit reste susceptible d'être mis en veille après inactivité.
 
-Les fichiers `index.html`, `style.css`, `audio.js`, `game.js`, `server.mjs`, `package.json`, `README.md` doivent être à la racine du dépôt. Aucune variable d'environnement ou base de données nécessaire.
+## Tests
 
-Le serveur HTTP et les WebSockets sont **sur le même domaine**. Ne publiez pas uniquement ces fichiers sur un site statique : pour le mode en ligne, il faut exécuter `server.mjs`.
-
-## Tester localement
-
-```
-node --check server.mjs
-npm start
-```
-
-Ouvrir `http://localhost:3000` dans plusieurs navigateurs. Créer un salon, puis ouvrir l'URL d'invitation sur trois autres navigateurs.
-
-## Limites du premier test
-
-- Tests techniques en local réalisés avec 4 connexions WebSocket et vérification visuelle de l'interface ; encore à éprouver en conditions Internet réelles.
-- 20 instantanés/seconde, sans interpolation sophistiquée ni reconnexion automatique.
-- Hébergement Render gratuit : mise en veille à l'inactivité ; les salons actifs sont perdus si le service redémarre.
-- Une seule instance serveur recommandée : salons conservés en RAM.
-- Aucune division, compte utilisateur, matchmaking public ou intégration Discord à ce stade.
-- Version **expérimentale** à utiliser entre amis avant diffusion publique.
+`npm test` pour le salon à quatre personnes, puis `npm run check`.

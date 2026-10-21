@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <meta name="theme-color" content="#101b30"/>
-  <title>VOLLEYLAB V0.16 — Aide facultative</title>
+  <title>VOLLEYLAB V0.17 — Aide facultative</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -13,7 +13,7 @@
     <div class="vignette" aria-hidden="true"></div>
 
     <header class="topbar">
-      <div class="brand"><span class="brand-mark">V<span>●</span></span><span>VOLLEYLAB <small>PLAYTEST 0.15</small></span></div>
+      <div class="brand"><span class="brand-mark">V<span>●</span></span><span>VOLLEYLAB <small>PLAYTEST 0.17</small></span></div>
       <div class="scoreboard" aria-live="polite">
         <div class="side blue"><span class="team">BLEUS</span><strong id="scoreBlue">0</strong></div>
         <div class="matchmeta"><span id="status">PREMIER SET</span><span class="dividing">/</span><span id="scoreMode">2v2</span><span class="dividing">/</span><span>7 PTS</span></div>
@@ -79,6 +79,13 @@
         <label class="help-option-row" for="showHelp"><span><b>Afficher les commandes en match</b><small>Deux panneaux dans les coins supérieurs, masqués au démarrage.</small></span><input type="checkbox" id="showHelp" aria-label="Afficher le tutoriel pendant le match"/></label>
         <p class="help-option-note">Le bouton <b>?</b> en haut de l'écran permet aussi d'afficher ou de masquer l'aide instantanément.</p>
       </section>
+      <section class="settings-section" id="performanceOptions">
+        <div class="settings-title"><span>⚡ FLUIDITÉ</span><small>Optimisation multijoueur</small></div>
+        <label for="graphicsQuality">Qualité graphique</label>
+        <select id="graphicsQuality" aria-label="Qualité graphique"><option value="auto">Automatique (conseillé)</option><option value="eco">Performance</option><option value="high">Qualité</option></select>
+        <p id="performanceStats" class="performance-stats" aria-live="off">FPS : — · Ping : —</p>
+        <p class="performance-note">Les joueurs et le ballon sont désormais affichés avec des mouvements lissés. La qualité automatique réduit la résolution si les FPS chutent.</p>
+      </section>
       <section class="settings-section" id="cameraOptions">
         <div class="settings-title"><span>◉ CAMÉRA</span><small>Vue arrière uniquement</small></div>
         <label for="camDist">Distance de caméra <output id="camDistValue">12,9 m</output></label>
@@ -127,7 +134,7 @@
     </aside>
 
     <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.16</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
+      <div class="modal-panel"><div class="eyebrow">PROTOTYPE JOUABLE · V0.17</div><div class="volley-logo">◉</div><h1 id="modalTitle">UN SMASH.<br/><em>ENCORE UN MATCH.</em></h1>
         <p id="modalDesc">Volleyball arcade 3D : choisis le format de ton match. Les personnages cartoon de la V0.11, la caméra réglable, les frappes, le service et les commandes personnalisées sont conservés.</p>
         <div class="mode-select" aria-label="Choix du format d’équipe">
           <div class="mode-heading"><strong>CHOISIS TON FORMAT</strong><span>EN SOLO CONTRE DES BOTS</span></div>
@@ -162,7 +169,7 @@
         <button class="play-btn" id="playBtn" type="button">JOUER EN 2v2 <span>↗</span></button>
         <button class="play-btn play-btn-online" id="onlineOpenBtn" type="button">JOUER EN LIGNE — 2v2 <span>✦</span></button>
         <button class="modal-settings-btn" id="menuSettingsBtn" type="button">⚙ Configurer la caméra et les touches</button>
-        <small>Version d’essai : les matchs restent contre l’IA. Le véritable multijoueur et Discord ne sont pas encore activés. Clique sur « Entrer » pour autoriser les sons du navigateur.</small>
+        <small>Solo contre l’IA ou multijoueur privé en 2v2. Discord n’est pas encore intégré. Clique sur « Entrer » pour activer les sons.</small>
       </div>
     </section>
 

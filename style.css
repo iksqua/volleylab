@@ -251,3 +251,8 @@
 .room-badge{left:24px;top:76px;transform:none}
 .online-active .legend,.online-active #servePanel,.online-active #smashReady,.online-active #servePracticeBtn,.online-active #smashPracticeBtn,.online-active #practiceBtn{display:none!important}
 @media(max-width:600px){.room-badge{left:12px;top:72px;max-width:calc(100% - 24px)}}
+
+/* V0.17 — options de performance */
+#graphicsQuality {display:block;width:100%;margin:.55rem 0 .7rem;color:#f7fcff;background:#203a5a;border:1px solid #5a7b9a;border-radius:9px;padding:.65rem;}
+.performance-stats {font-weight:700;color:#91f8d4;letter-spacing:.025em;margin:.55rem 0;}
+.performance-note {font-size:12px;color:#b6cbdb;line-height:1.5;margin:.3rem 0;}
